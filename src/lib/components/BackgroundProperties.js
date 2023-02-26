@@ -11,17 +11,17 @@ import ColorPicker from './ColorPicker';
 import ImageEditor from "./ImageEditor";
 
 function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) {
-    const [type, setType] = useState(background.background_picture_layout ? 'picture' : 'color');
+    const [type, setType] = useState(background.picture_layout ? 'picture' : 'color');
     const [color, setColor] = useState(background.color ?? '#FFFFFF');
-    const [picture, setPicture] = useState(background.background_picture);
-    const [layout, setLayout] = useState(background.background_picture_layout);
+    const [picture, setPicture] = useState(background.picture);
+    const [layout, setLayout] = useState(background.picture_layout);
 
     function modalSubmit() {
         if (onSubmit) {
             onSubmit({
                 color: color,
-                background_picture: (type === 'picture') ? picture : '',
-                background_picture_layout: layout
+                picture: (type === 'picture') ? picture : '',
+                picture_layout: layout
             });
         }
         if (onClose) {
