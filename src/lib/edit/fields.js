@@ -4,23 +4,20 @@
  * @license GNU LGPL version 3
  **/
 
-function editInternalField(sideType)
+function editInternalField()
 {
-    this.state.selectedside = sideType;
-    const renderer = this.sides[sideType];
-    if (renderer.data.fields.selected.length > 0)
+    if (this.renderer.data.fields.selected.length > 0)
     {
         this.setState({
             show_field: true
         });
-        renderer.sortByZIndex.call(this);
+        this.renderer.sortByZIndex();
     }
 }
 
-function editConditionalRenderingField(sideType)
+function editConditionalRenderingField()
 {
-    this.state.selectedside = sideType;
-    if (this.sides[sideType].data.fields.selected.length > 0)
+    if (this.renderer.data.fields.selected.length > 0)
     {
         this.setState({
             show_conditionalrendering: true
@@ -28,37 +25,33 @@ function editConditionalRenderingField(sideType)
     }
 }
 
-function editField(sideType)
+function editField()
 {
-    this.state.selectedside = sideType;
-    if (this.sides[sideType].data.fields.selected.length > 0)
+    if (this.renderer.data.fields.selected.length > 0)
     {
         let newstate = {};
-        newstate['show_field_' + this.sides[sideType].data.fields.selected[0].options.type]  = true;
+        newstate['show_field_' + this.renderer.data.fields.selected[0].options.type]  = true;
         this.setState(newstate);
     }
 }
 
-function addFieldFromList(ev, canvas, sideType)
+function addFieldFromList(ev, canvas)
 {
-    const renderer = this.sides[sideType];
-    const pos = renderer.features.fields.getMousePos(canvas.current, ev);
+    const pos = this.renderer.features.fields.getMousePos(canvas.current, ev);
     this.setState({
-        currentside: sideType,
-        add_x: pos.x - renderer.graphics.card.x,
-        add_y: pos.y -  renderer.graphics.card.y,
+        add_x: pos.x - this.renderer.graphics.card.x,
+        add_y: pos.y -  this.renderer.graphics.card.y,
         show_addfieldfromlist: true
     });
 }
 
 async function addFieldFromListConfirm(f)
 {
-    const renderer = this.sides[this.state.currentside];
-    const cardRef = renderer.graphics.card;
+    const cardRef = this.renderer.graphics.card;
     let printField = this.props.fieldlist.findOne({_id: f.id});
     if (printField)
     {
-        let field = await renderer.features.fields.createField(
+        let field = await this.renderer.features.fields.createField(
             {type: printField.type},
             {x: this.state.add_x, y: this.state.add_y}
         );
@@ -68,12 +61,12 @@ async function addFieldFromListConfirm(f)
             field.options.value = '<<' + printField.name + '>>';
             cardRef.removeChild(field);
             field.options.type = printField.type;
-            field = await renderer.features.fields.createField(
+            field = await this.renderer.features.fields.createField(
                 field.options,
                 {x: field.options.x, y: field.options.y}
             );
-            renderer.features.fields.addFieldToCard(field);
-            renderer.handleOnChange();
+            this.renderer.features.fields.addFieldToCard(field);
+            this.renderer.handleOnChange();
         }
     }
 }

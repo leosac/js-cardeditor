@@ -6,19 +6,21 @@
 import { useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
+import { CardHelper } from "@leosac/cardrendering";
 import DesignerModal from "../DesignerModal";
+import ColorPicker from "../ColorPicker";
 
 function BarcodeProperties({t, field, show, editor, onClose, onSubmit}) {
     const [value, setValue] = useState(field.value);
+    const [color, setColor] = useState(field.color);
     const [fontFamily, setFontFamily] = useState(field.fontFamily);
-    const [fontSize, setFontSize] = useState(field.fontSize);
 
     function modalSubmit() {
         if (onSubmit) {
             onSubmit({
                 value: value,
-                fontFamily: fontFamily,
-                fontSize: fontSize
+                color: color,
+                fontFamily: fontFamily
             });
         }
         if (onClose) {
@@ -33,23 +35,18 @@ function BarcodeProperties({t, field, show, editor, onClose, onSubmit}) {
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />
             </Form.Group>
             <Form.Group>
-                <Form.Label>{t('properties.fontfamily')}</Form.Label>
-                <Form.Control as="select" value={fontFamily} onChange={e => setFontFamily(e.target.value)}>
-                    <option>C39HrP24DhTt</option>
-                    <option>C39HrP24DlTt</option>
-                    <option>C39HrP36DlTt</option>
-                    <option>C39HrP48DhTt</option>
-                    <option>Code39</option>
-                    <option>Code 93</option>
-                    <option>Code 128</option>
-                    <option>Code CodaBar</option>
-                    <option>UPC-A</option>
-                    <option>EanBwrP72Tt</option>
-                </Form.Control>
+                <Form.Label>{t('properties.color')}</Form.Label>
+                <ColorPicker color={color} onChangeComplete={setColor} />
             </Form.Group>
             <Form.Group>
-                <Form.Label>{t('properties.fontsize')}</Form.Label>
-                <Form.Control type="text" placeholder="20" value={fontSize} onChange={e => setFontSize(e.target.value)} />
+                <Form.Label>{t('properties.fontfamily')}</Form.Label>
+                <Form.Control as="select" value={fontFamily} onChange={e => setFontFamily(e.target.value)}>
+                    {CardHelper.getBarcodes().map((barcode) => {
+                        return (
+                            <option key={barcode.code}>{barcode.name}</option>
+                        )
+                    })}
+                </Form.Control>
             </Form.Group>
         </DesignerModal>
     );

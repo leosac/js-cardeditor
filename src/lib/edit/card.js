@@ -8,10 +8,9 @@ import "jquery-ui";
 import "jquery-ui/ui/widgets/draggable";
 import "jquery-ui/ui/widgets/droppable";
 
-function editBackground(sideType)
+function editBackground()
 {
     this.setState({
-        selectedside: sideType,
         show_background: true
     });
 }

@@ -7,17 +7,11 @@ import $ from "jquery";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { CardHelper } from "@leosac/cardrendering";
-import AddFieldFromList from "./AddFieldFromList";
 import FormValidator from "../form";
 import {
-    editField, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm
-} from '../edit/fields';
-import {
-    editGrid, editGridConfirm, toggleGrid
-} from '../edit/grid';
-import {
-    newCard, editCustomSize, editBackground
+    newCard, editCustomSize
 } from '../edit/card';
+import { toggleGrid } from '../edit/grid';
 import {
     onCardKeyDown, onCardKeyUp, onCardPaste
 } from '../edit/onEvent';
@@ -62,24 +56,16 @@ class CardDesigner extends React.Component {
         this.onCardKeyDown = onCardKeyDown.bind(this);
         this.onCardKeyUp = onCardKeyUp.bind(this);
         this.onCardPaste = onCardPaste.bind(this);
-        this.addFieldFromListConfirm = addFieldFromListConfirm.bind(this);
+        this.toggleGrid = toggleGrid.bind(this);
         this.newCard = newCard.bind(this);
         this.editCustomSize = editCustomSize.bind(this);
-        this.editBackground = editBackground.bind(this);
         this.loadSnapshot = loadSnapshot.bind(this);
         this.saveCurrentSnapshot = saveCurrentSnapshot.bind(this);
         this.undoTemplate = undoTemplate.bind(this);
         this.redoTemplate = redoTemplate.bind(this);
         this.viewHistory = viewHistory.bind(this);
-        this.editGrid = editGrid.bind(this);
-        this.editGridConfirm = editGridConfirm.bind(this);
-        this.toggleGrid = toggleGrid.bind(this);
         this.toDPF = toDPF.bind(this);
         this.loadDPF = loadDPF.bind(this);
-        this.editConditionalRenderingField = editConditionalRenderingField.bind(this);
-        this.editInternalField = editInternalField.bind(this);
-        this.editField = editField.bind(this);
-        this.addFieldFromList = addFieldFromList.bind(this);
 
         this.sides = {
             recto: undefined,
@@ -101,7 +87,6 @@ class CardDesigner extends React.Component {
                 redo: [],
                 history: []
             },
-            selectedside: 'recto',
             alerts: [],
 
             isRectoVerso: false,
@@ -109,41 +94,23 @@ class CardDesigner extends React.Component {
             cardheight: 0,
             cardborder: 3,
             currentlayout: CardHelper.getLayouts(this.props.enabledCardSizes)[0].value,
-            orientation: 'Landscape',
-            selectedfield: [],
-            clipboardfield: null,
-            clipboardfieldSideType: null,
-            multiselection: false,
-            rotationmode: false,
-            preventkeystroke: false,
-            
-            show_field: false,
-            show_field_label: false,
-            show_field_urllink: false,
-            show_field_picture: false,
-            show_field_barcode: false,
-            show_field_qrcode: false,
-            show_field_pdf417: false,
-            show_field_datamatrix: false,
-            show_field_rectangle: false,
-            show_field_circle: false,
-            show_field_fingerprint: false,
-            show_conditionalrendering: false,
-            show_background: false,
-            show_gridsettings: false,
-            show_addfieldfromlist: false,
-
-            add_x: 0,
-            add_y: 0
+            orientation: 'Landscape'
         }
     }
 
     initProps() {
-        //Check if "cb_AtEdit" option is a function
-        if (this.props.cb_AtEdit && typeof this.props.cb_AtEdit !== "function")
+        //Check if "onEdit" option is a function
+        if (this.props.onEdit && typeof this.props.onEdit !== "function")
         {
-            console.error('JsCardRendering : cb_AtEdit option is not a function, option removed.');
-            delete this.props.cb_AtEdit;
+            console.error('JsCardRendering : onEdit option is not a function, option removed.');
+            delete this.props.onEdit;
+        }
+
+        //Check if "onSubmit" option is a function
+        if (this.props.onSubmit && typeof this.props.onSubmit !== "function")
+        {
+            console.error('JsCardRendering : onSubmit option is not a function, option removed.');
+            delete this.props.onSubmit;
         }
 
         if (!this.props.formatVersion) {
@@ -211,6 +178,10 @@ class CardDesigner extends React.Component {
     changeFactory(factorytype, sideType) {
         this.sides[sideType].data.fields.factorytype = factorytype;
     }
+
+    alignSelectedField(align, sideType) {
+        this.sides[sideType].features.fields.alignSelectedField(align);
+    }
     
     versoDisplayStyle() {
         if (this.state.isRectoVerso)
@@ -218,10 +189,6 @@ class CardDesigner extends React.Component {
             return "block";
         }
         return "none";
-    }
-    
-    multipleFieldSelected() {
-        return (this.state.selectedfield.length > 1);
     }
 
     showCustomSize() {
@@ -366,15 +333,21 @@ class CardDesigner extends React.Component {
     componentDidMount() {
         $(document).on('keydown', (event) =>
         {
-            this.onCardKeyDown(event);
+            this.getSides.call(this).forEach(sideType => {
+                this.onCardKeyDown(event, this.sides[sideType]);
+            });
         });
         $(document).on('keyup', (event) =>
         {
-            this.onCardKeyUp(event);
+            this.getSides.call(this).forEach(sideType => {
+                this.onCardKeyUp(event, this.sides[sideType]);
+            });
         });
         $(document).on('paste', (event) =>
         {
-            this.onCardPaste(event);
+            this.getSides.call(this).forEach(sideType => {
+                this.onCardPaste(event, this.sides[sideType]);
+            });
         });
 
         this.newCard(CardHelper.getLayouts(this.props.enabledCardSizes)[0].value).then(() => {
@@ -470,18 +443,7 @@ class CardDesigner extends React.Component {
     render() {
         const { t } = this.props;
         return (
-            <div>
-                <span style={{visibility: 'hidden', fontFamily:'C39HrP24DhTt'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'C39HrP24DlTt'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'C39HrP36DlTt'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'C39HrP48DhTt'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'Code39'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'Code 93'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'Code 128'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'EanBwrP72Tt'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily:'UPC-A'}}>&nbsp;</span>
-                <span style={{visibility: 'hidden', fontFamily: 'Code CodaBar'}}>&nbsp;</span>
-            
+            <div>            
                 {this.showMessageInvalidFormatVersion(this.props.formatVersion) &&
                     <div id="invalidFormatVersion" className="alert alert-danger alert-dismissible" role="alert">
                         {t('create.invalidFormatVersion')}
@@ -619,13 +581,13 @@ class CardDesigner extends React.Component {
                                                 }
 
                                                 <NavDropdown title={t('create.align')}>
-                                                    <NavDropdown.Item href="#align_left" onClick={() => this.alignSelectedField('left')}><FontAwesomeIcon icon={["fas", "fa-align-left"]} /> {t('create.align_left')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_right" onClick={() => this.alignSelectedField('right')}><FontAwesomeIcon icon={["fas", "fa-align-right"]} /> {t('create.align_right')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_top" onClick={() => this.alignSelectedField('top')}><FontAwesomeIcon icon={["fas", "fa-arrow-up"]} /> {t('create.align_top')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_bottom" onClick={() => this.alignSelectedField('bottom')}><FontAwesomeIcon icon={["fas", "fa-arrow-down"]} /> {t('create.align_bottom')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_vertical" onClick={() => this.alignSelectedField('vertical')}><FontAwesomeIcon icon={["fas", "fa-grip-lines-vertical"]} /> {t('create.align_vertical')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_horizontal" onClick={() => this.alignSelectedField('horizontal')}><FontAwesomeIcon icon={["fas", "fa-grip-lines"]} /> {t('create.align_horizontal')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#grid" onClick={() => this.toggleGrid()}><FontAwesomeIcon icon={["fas", "fa-border-all"]} /> {t('create.grid')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_left" onClick={() => this.alignSelectedField('left', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-left"]} /> {t('create.align_left')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_right" onClick={() => this.alignSelectedField('right', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-right"]} /> {t('create.align_right')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_top" onClick={() => this.alignSelectedField('top', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-up"]} /> {t('create.align_top')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_bottom" onClick={() => this.alignSelectedField('bottom', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-down"]} /> {t('create.align_bottom')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_vertical" onClick={() => this.alignSelectedField('vertical', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines-vertical"]} /> {t('create.align_vertical')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#align_horizontal" onClick={() => this.alignSelectedField('horizontal', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines"]} /> {t('create.align_horizontal')}</NavDropdown.Item>
+                                                    <NavDropdown.Item href="#grid" onClick={() => this.toggleGrid(sideType)}><FontAwesomeIcon icon={["fas", "fa-border-all"]} /> {t('create.grid')}</NavDropdown.Item>
                                                 </NavDropdown>
                                             </Nav>
                                         </Navbar.Collapse>
@@ -634,18 +596,18 @@ class CardDesigner extends React.Component {
                     
                                 <div className="row">
                                     <div className="col-md-12 text-center">
-                                        <CardSide sideType={sideType} editor={this} />
+                                        <CardSide sideType={sideType} editor={this} fieldlist={this.props.fieldlist} />
                                     </div>
                                 </div>
                             </div>
                         )
                     })}
                     
-                    {this.props.enableSubmitBtn &&
+                    {this.props.onSubmit &&
                         <div className="text-right edit-create-button-template">
                             {this.props.create
-                                ? <button type="submit" className="btn btn-lg btn-success">{t('common.create')}</button>
-                                : <button id="print_submit" type="submit" className="btn btn-lg btn-success">{t('common.validate')}</button>
+                                ? <button type="submit" className="btn btn-lg btn-success" onClick={this.props.onSubmit}>{t('common.create')}</button>
+                                : <button id="print_submit" type="submit" className="btn btn-lg btn-success" onClick={this.props.onSubmit}>{t('common.validate')}</button>
                             }
                         </div>
                     }
@@ -706,7 +668,6 @@ class CardDesigner extends React.Component {
                 {this.state.show_printcard &&
                     <PrintCard show={this.state.show_printcard} editor={this} fields={this.getAllNamedFields()} onClose={() => this.setState({show_printcard: false})} onSubmit={this.printCardConfirm} />                            
                 }
-                <AddFieldFromList show={this.state.show_addfieldfromlist} editor={this} fieldlist={this.props.fieldlist} onClose={() => this.setState({show_addfieldfromlist: false})} onSubmit={this.addFieldFromListConfirm} />
                 <History show={this.state.show_history} editor={this} snapshots={this.state.snapshots.history} onClose={() => this.setState({show_history: false})} onSubmit={this.loadSnapshot} />
             </div>
         );
@@ -727,8 +688,7 @@ CardDesigner.defaultProps = {
     },
     enableUnprintable: false,
     enableName: true,
-    enableSubmitBtn: true,
-    cb_AtEdit: undefined
+    onSubmit: undefined
 }
 
 export default withTranslation()(CardDesigner);

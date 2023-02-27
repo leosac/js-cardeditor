@@ -7,68 +7,70 @@ import { withTranslation } from "react-i18next";
 import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function CardSideMenu({t, editor, renderer, sideType, canvas}) {
-    renderer.showMenu = useContextMenu({id: 'carddesign_menu_' + sideType});
+function CardSideMenu({t, editor, cardside, canvas}) {
+    const sideType = cardside.props.sideType;
+    const { show } = useContextMenu({id: 'carddesign_menu_' + sideType});
+    cardside.showMenu = show;
     
     return (
         <div>
-            {renderer.data.fields.selected.length > 0 &&
+            {cardside.renderer.data.fields.selected.length > 0 &&
                 <Menu id={'carddesign_menu_' + sideType}>
-                    <Item onClick={() => editor.editField(sideType)}>
+                    <Item onClick={() => cardside.editField()}>
                         <FontAwesomeIcon icon={["fas", "fa-edit"]} />
                         <span>Edit Properties</span>
                     </Item>
-                    <Item onClick={() => editor.editInternalField(sideType)}>
+                    <Item onClick={() => cardside.editInternalField()}>
                         <FontAwesomeIcon icon={["fas", "fa-edit"]} />
                         <span>Edit Internal Properties</span>
                     </Item>
-                    <Item onClick={() => editor.editConditionalRenderingField(sideType)}>
+                    <Item onClick={() => cardside.editConditionalRenderingField()}>
                         <FontAwesomeIcon icon={["fas", "fa-edit"]} />
                         <span>Conditional Rendering</span>
                     </Item>
-                    <Item onClick={renderer.features.fields.cutField}>
+                    <Item onClick={() => cardside.renderer.features.fields.cutField()}>
                         <FontAwesomeIcon icon={["fas", "fa-cut"]} />
                         <span>Cut</span>
                     </Item>
-                    <Item onClick={renderer.features.fields.copyField}>
+                    <Item onClick={() => cardside.renderer.features.fields.copyField()}>
                         <FontAwesomeIcon icon={["fas", "fa-copy"]} />
                         <span>Copy</span>
                     </Item>
-                    <Item onClick={renderer.features.fields.deleteField}>
+                    <Item onClick={() => cardside.renderer.features.fields.deleteField()}>
                         <FontAwesomeIcon icon={["fas", "fa-remove"]} />
                         <span>{t('common.delete')}</span>
                     </Item>
                     <Separator />
-                    <Item onClick={renderer.features.fields.unselectField}>
+                    <Item onClick={() => cardside.renderer.features.fields.unselectField()}>
                         <span>Unselect</span>
                     </Item>
                 </Menu>
             }
 
-            {renderer.data.fields.selected.length === 0 &&
+            {cardside.renderer.data.fields.selected.length === 0 &&
                 <Menu id={'carddesign_menu_' + sideType}>
-                    <Item onClick={({ event }) => editor.sides[sideType].features.fields.pasteFieldAtMousePos(event, canvas.current, sideType)}>
+                    <Item onClick={({ event }) => cardside.renderer.features.fields.pasteFieldAtMousePos(event, canvas.current)}>
                         <FontAwesomeIcon icon={["fas", "fa-paste"]} />
                         <span>Paste</span>
                     </Item>
-                    <Item onClick={editor.undoTemplate} disabled={editor.state.snapshots.undo.length <= 1}>
+                    <Item onClick={() => editor.undoTemplate()} disabled={editor.state.snapshots.undo.length <= 1}>
                         <span>Undo</span>
                     </Item>
-                    <Item onClick={editor.redoTemplate} disabled={editor.state.snapshots.redo.length <= 1}>
+                    <Item onClick={() => editor.redoTemplate()} disabled={editor.state.snapshots.redo.length <= 1}>
                         <span>Redo</span>
                     </Item>
-                    <Item onClick={editor.viewHistory} disabled={editor.state.snapshots.undo.length <= 1 && editor.state.snapshots.redo.length <= 0}>
+                    <Item onClick={() => editor.viewHistory()} disabled={editor.state.snapshots.undo.length <= 1 && editor.state.snapshots.redo.length <= 0}>
                         <span>History...</span>
                     </Item>
                     <Separator />
-                    <Item onClick={({ event }) => editor.addFieldFromList(event, canvas.current, sideType)}>
+                    <Item onClick={({ event }) => cardside.addFieldFromList(event, canvas.current)}>
                         <span>Add field from list...</span>
                     </Item>
-                    <Item onClick={editor.editGrid}>
+                    <Item onClick={() => cardside.editGrid()}>
                         <span>View Settings...</span>
                     </Item>
                     <Separator />
-                    <Item onClick={() => editor.editBackground(sideType)}>
+                    <Item onClick={() => cardside.editBackground()}>
                         <span>Set Background...</span>
                     </Item>
                 </Menu>

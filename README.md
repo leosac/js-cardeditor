@@ -18,8 +18,6 @@ import { CardDesigner } from "@leosac/js-cardrendering";
 
 /* Import bootstrap css if missing */
 import "bootstrap/dist/css/bootstrap.min.css";
-/* Import barcode fonts if missing */
-import "./css/barcode-fonts.css";
 
 const App = () => (
   <CardDesigner enableDownload="true" enablePrint="true" />
@@ -60,17 +58,17 @@ Several properties can be optionally passed to the component.
 
 There is two parameters :
 
-    - cb_AtEdit [`Function`] (`Param 1: Card Template, Param 2: Snapshot`: Function called at each field edition (created, removed, resized, moved...)
     - content [`Object`]: Card Template (more informations inside "Load Card Template" section)
     - draggableFields [`Array`] (`{name : String, default_value: String}`): List of draggable fields
     - formatVersion [`String`] (`Default: Undefined`): Force a specific format version for the output (default to latest version)
     - enabledCardSizes [`Object` : Select cards templates you want to authorize. (more informations inside "Card Templates" section)
     - enableDownload [`Boolean`] (`Default: false`): Enable/Disable Download features
     - enableName [`Boolean`] (`Default:true`): Enable/Disable Name input
-    - enablePrint [`Boolean`] (`Default:false`): Enable/Disable Printing features
-    - enableSubmitBtn [`Boolean`] (`Default:true`): Enable/Disable Submit button
-    - enableUnprintable [`Boolean`] (`Default:false`): Active unprintable objects, like fingerprint
     - maxNameLength [`Number`]: Set name max length
+    - enablePrint [`Boolean`] (`Default:false`): Enable/Disable Printing features
+    - enableUnprintable [`Boolean`] (`Default:false`): Active unprintable objects, like fingerprint
+    - onEdit [`Function`] (`Param 1: Snapshot): Function called at each template changed / field edition (created, removed, resized, moved...)
+    - onSubmit [`Function`] (): Enable the Submit button and trigger this function on submition
 
 #### NOTE : If "datas.content" is undefined, it create a new card template.
 

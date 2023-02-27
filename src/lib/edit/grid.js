@@ -16,29 +16,32 @@ function editGrid()
 
 function editGridConfirm(grid)
 {
-    const renderer = this.sides[this.currentside];
-    const oldunit = renderer.data.grid.unit;
-    const oldscale = renderer.data.grid.scale;
-    const oldruler = renderer.data.grid.ruler;
+    const oldunit = this.renderer.data.grid.unit;
+    const oldscale = this.renderer.data.grid.scale;
+    const oldruler = this.renderer.data.grid.ruler;
 
     const options = Object.keys(grid);
     options.forEach((key) =>
     {
-        renderer.data.grid[key] = grid[key];
+        this.renderer.data.grid[key] = grid[key];
     });
 
-    if (oldunit !== renderer.data.grid.unit || oldruler !== renderer.data.grid.ruler || oldscale !== renderer.data.grid.scale) {
-        reloadTemplate.call(this);
+    if (oldunit !== this.renderer.data.grid.unit || oldruler !== this.renderer.data.grid.ruler || oldscale !== this.renderer.data.grid.scale) {
+        reloadTemplate.call(this.props.editor);
     } else {
-        renderer.features.grid.drawGrid();
+        this.renderer.features.grid.drawGrid();
     }
 }
 
-function toggleGrid()
+function toggleGrid(sideType)
 {
-    const renderer = this.sides[this.currentside];
-    renderer.data.grid.enabled = !renderer.data.grid.enabled;    
-    renderer.features.grid.drawGrid();
+    const renderer = this.sides[sideType];
+    renderer.data.grid.enabled = !renderer.data.grid.enabled;
+    if (renderer.data.grid.enabled) {
+        renderer.features.grid.drawGrid();
+    } else {
+        renderer.features.grid.cleanGrid();
+    }
 }
 
 export {

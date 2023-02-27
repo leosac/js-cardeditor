@@ -11,8 +11,8 @@ import {
 
 async function printTemplate()
 {
-    const grid = this.sides.recto.graphics.card.grid;
-    if (grid.enabled){
+    const data = this.sides.recto.data;
+    if (data.grid.enabled){
         this.getSides.call(this).forEach(sideType => {
             const renderer = this.sides[sideType];
             renderer.features.fields.unselectField();
@@ -21,22 +21,19 @@ async function printTemplate()
     }
 
     // Be sure we hide visual helpers
-    grid.enabled = false;
-    grid.ruler = false;
-    this.setState({
-        cardborder: 0,
-        grid: grid
-    });
+    data.grid.enabled = false;
+    data.grid.ruler = false;
+    data.card.border = 0;
     await reloadTemplate.call(this);
 
     // If we're in recto/verso mode, we need twice the height.
     let height = 0;
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
-        height += renderer.view.height;
+        height += renderer.graphics.renderer.view.height;
     });
 
-    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides['recto'].view.width);
+    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides['recto'].graphics.renderer.view.width);
     mywindow.document.write('<html><head><title>Card</title>');
     if (this.state.currentlayout === 'cr80') {
         mywindow.document.write('<style>@page { size: 85.725mm 53.975mm; margin: 0; } body { overflow-x: visible; overflow-y: visible; }</style>');
@@ -45,8 +42,8 @@ async function printTemplate()
 
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
-        renderer.render(renderer.graphics.stage);
-        mywindow.document.write('<img src="' + renderer.view.toDataURL("image/png") + '" style="width: 100%; height: 100%" />');
+        renderer.graphics.renderer.render(renderer.graphics.stage);
+        mywindow.document.write('<img src="' + renderer.graphics.renderer.view.toDataURL("image/png") + '" style="width: 100%; height: 100%" />');
     });
 
     mywindow.document.write('</body></html>');

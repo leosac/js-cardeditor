@@ -22,7 +22,8 @@ async function onCardClickDown(event, renderer)
     {
         const position = renderer.graphics.card.toLocal(event.global);
         
-        if (renderer.data.fields.factorytype === 'cursor')
+        const factorytype = renderer.data.fields.factorytype ?? 'cursor';
+        if (factorytype === 'cursor')
         {
             if (renderer.graphics.stage.selectarea !== undefined && renderer.graphics.stage.selectarea !== null)
             {
@@ -222,20 +223,18 @@ function onCardKeyUp(event, renderer) {
     }
 }
 
-function onDragStart(event, renderer, field) {
-    const factorytype = renderer.data.fields.factorytype;
+function onDragStart(event, cardside, renderer, field) {
+    const factorytype = renderer.data.fields.factorytype ?? 'cursor';
 
     $(':focus').blur();
-    if (factorytype === 'cursor')
-    {
-        if (renderer.data.clicks !== 1)
-        {
+    if (factorytype === 'cursor') {
+        if (renderer.data.clicks !== 1) {
             renderer.data.clicks = 1;
             renderer.data.clicksTimer = setTimeout(() => {
                 renderer.data.clicks = 0;
             }, 300);
 
-            if ($.inArray(field, renderer.data.fields.selected) === -1)  {
+            if (renderer.data.fields.selected.indexOf(field) === -1)  {
                 if (!renderer.data.fields.multiselection) {
                     if (renderer.data.fields.selected.length > 0) {
                         renderer.features.fields.unselectField();
@@ -260,15 +259,11 @@ function onDragStart(event, renderer, field) {
                 field.dragging = true;
                 field.cursor = 'move';
             }
-        }
-        else
-        {
+        } else {
             renderer.data.clicks = 0;
-            renderer.features.fields.editField();
+            cardside.editField();
         }
-    }
-    else
-    {
+    } else {
         // We want to draw a new item (on top of an other one).
         onCardClickDown(event, renderer);
     }

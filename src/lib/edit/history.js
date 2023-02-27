@@ -61,9 +61,11 @@ function createSnapshot(preview)
 
     if (preview) {
         const renderer = this.sides['recto'];
+        let oldgrid = false;
         //Disable Grid
         if (renderer.data.grid) {
-            renderer.data.grid.visible = false;
+            oldgrid = renderer.data.grid.enabled;
+            renderer.data.grid.enabled = false;
         }
 
         //Disable Highlights
@@ -88,7 +90,7 @@ function createSnapshot(preview)
 
         //Enable Grid
         if (renderer.data.grid) {
-            renderer.data.grid.visible = true;
+            renderer.data.grid.enabled = oldgrid;
         }
         //Enable Highlights
         if (renderer.graphics.highlights)
@@ -131,6 +133,10 @@ function saveCurrentSnapshot()
             this.state.snapshots.redo = [];
         }
         addSnapshotToHistory.call(this, this.state.snapshots.undo, snapshot);
+    }
+
+    if (this.props.onEdit) {
+        this.props.onEdit(snapshot);
     }
 }
 

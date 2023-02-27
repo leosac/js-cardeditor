@@ -4,7 +4,6 @@ import "./i18n";
 import { CardDesigner } from "./lib";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/barcode-fonts.css";
 import "./css/jsCardRendering.css";
 
 const App = () => (

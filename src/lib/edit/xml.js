@@ -440,7 +440,7 @@ function getCardSideTemplate($xside) {
         }
         tpl.background.picture_layout = Number.parseInt($xside.children('BackgroundImageLayout').text());
 
-        $xside.children('Fields').children('Field').forEach(function() {
+        $xside.children('Fields').children('Field').map(function() {
             const $this = $(this);
             const ftype = $this.attr('i:type').split(':')[1];
             let field = null;
@@ -673,6 +673,7 @@ function getCardSideTemplate($xside) {
             if (field != null) {
                 tpl.fields.push(field);
             }
+            return field;
         });
     }
 
