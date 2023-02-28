@@ -33,7 +33,7 @@ function DataMatrixProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="dataMatrix_properties" show={show} editor={editor} title={t('properties.prop_datamatrix')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id="datamatrix_properties" show={show} editor={editor} title={t('properties.prop_datamatrix')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />
@@ -49,7 +49,7 @@ function DataMatrixProperties({t, field, show, editor, onClose, onSubmit}) {
             <Form.Group>
                 <Form.Label>{t('properties.prop_datamatrix_symbolSize')}</Form.Label>
                 <Form.Control as="select" value={sizeIdx} onChange={e => setSizeIdx(e.target.value)}>
-                    {CardHelper.getDataMatrixSizeIdx(t).map((idx) => {
+                    {CardHelper.getDataMatrixSizeIdx().map((idx) => {
                         return (
                             <option key={idx.value} value={idx.value}>{idx.label}</option>
                         )

@@ -7,15 +7,16 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { CardRenderer } from "@leosac/cardrendering";
 import { onCardClickUp, onCardClickDown, onCardMouseMove, onDragStart, onDragEnd, onDragMove, onSelectedSpriteCreated } from "../edit/onEvent";
-import { editField, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm } from '../edit/fields';
+import { editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm } from '../edit/fields';
 import { editGrid, editGridConfirm } from '../edit/grid';
 import { editBackground } from '../edit/card';
 import GridSettings from "./GridSettings";
 import FieldProperties from "./FieldProperties";
+import FieldBorderProperties from "./FieldBorderProperties";
 import { BarcodeProperties, CircleProperties, DataMatrixProperties, FingerprintProperties, LabelProperties,
     Pdf417Properties, PictureProperties, QrCodeProperties, RectangleProperties, UrlLinkProperties} from "./Fields";
-import BackgroundProperties from "./BackgroundProperties";
 import ConditionalRendering from "./ConditionalRendering";
+import BackgroundProperties from "./BackgroundProperties";
 import AddFieldFromList from "./AddFieldFromList";
 import CardSideMenu from "./CardSideMenu";
 import 'react-contexify/ReactContexify.css';
@@ -32,6 +33,7 @@ class CardSide extends React.Component {
         this.editConditionalRenderingField = editConditionalRenderingField.bind(this);
         this.editInternalField = editInternalField.bind(this);
         this.editField = editField.bind(this);
+        this.editFieldBorder = editFieldBorder.bind(this);
         this.addFieldFromList = addFieldFromList.bind(this);
         this.addFieldFromListConfirm = addFieldFromListConfirm.bind(this);
 
@@ -39,6 +41,7 @@ class CardSide extends React.Component {
             selectedfield: undefined,
 
             show_field: false,
+            show_fieldborder: false,
             show_field_label: false,
             show_field_urllink: false,
             show_field_picture: false,
@@ -82,7 +85,7 @@ class CardSide extends React.Component {
     }
 
     handleSelectionChanged(cardside, selection) {
-        cardside.setState({selectedfield: selection.length > 0 ? selection[0].options : null})
+        cardside.setState({selectedfield: selection.length > 0 ? selection[0].options : null});
     }
 
     handleOnFieldAdded(cardside, field) {
@@ -103,8 +106,7 @@ class CardSide extends React.Component {
 
     updateBackground(background) {
         const options = Object.keys(background);
-        options.forEach(key =>
-        {
+        options.forEach(key => {
             this.renderer.graphics.card.options.background[key] = background[key];
         });
         this.renderer.drawCardBackground();
@@ -121,14 +123,17 @@ class CardSide extends React.Component {
     }
 
     render() {
-        const { t, editor, sideType } = this.props;
+        const { editor, sideType } = this.props;
         return (
             <div>
                 <canvas ref={this.canvasRef} className="carddesign" id={'carddesign_' + sideType} onContextMenu={(e) => this.handleContextMenu.call(this, e)}></canvas>
                 <CardSideMenu editor={editor} renderer={this.renderer} cardside={this} canvas={this.canvasRef} />
                 {this.state.selectedfield &&
-                    <div>
+                    <React.Fragment>
                         <FieldProperties show={this.state.show_field} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field: false})} onSubmit={(options) => this.updateSelectedField(options)} />
+                        {this.state.selectedfield.border &&
+                            <FieldBorderProperties show={this.state.show_fieldborder} editor={editor} border={this.state.selectedfield.border} onClose={() => this.setState({show_fieldborder: false})} onSubmit={(border) => this.updateSelectedField({border: border})} />
+                        }
                         <ConditionalRendering show={this.state.show_conditionalrendering} editor={editor} entries={this.state.selectedfield.conditionalRenderingEntries} onClose={() => this.setState({show_conditionalrendering: false})} onSubmit={entries => this.updateSelectedField({conditionalRenderingEntries: entries})} />
                         <LabelProperties show={this.state.show_field_label} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_label: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <UrlLinkProperties show={this.state.show_field_urllink} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_urllink: false})} onSubmit={(options) => this.updateSelectedField(options)} />
@@ -137,16 +142,17 @@ class CardSide extends React.Component {
                         <QrCodeProperties show={this.state.show_field_qrcode} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_qrcode: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <Pdf417Properties show={this.state.show_field_pdf417} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_pdf417: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <DataMatrixProperties show={this.state.show_field_datamatrix} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_datamatrix: false})} onSubmit={(options) => this.updateSelectedField(options)} />
+                        <FingerprintProperties show={this.state.show_field_fingerprint} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_fingerprint: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <RectangleProperties show={this.state.show_field_rectangle} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_rectangle: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <CircleProperties show={this.state.show_field_circle} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_circle: false})} onSubmit={(options) => this.updateSelectedField(options)} />
-                    </div>
+                    </React.Fragment>
                 }
                 {this.renderer.graphics.card &&
-                    <div>
+                    <React.Fragment>
                         <BackgroundProperties show={this.state.show_background} editor={editor} background={this.renderer.graphics.card.options.background} onClose={() => this.setState({show_background: false})} onSubmit={background => this.updateBackground(background)} />
                         <GridSettings show={this.state.show_gridsettings} editor={editor} grid={this.renderer.data.grid} onClose={() => this.setState({show_gridsettings: false})} onSubmit={(grid) => this.editGridConfirm(grid)} />
                         <AddFieldFromList show={this.state.show_addfieldfromlist} editor={editor} fieldlist={this.props.fieldlist} onClose={() => this.setState({show_addfieldfromlist: false})} onSubmit={(field) => this.addFieldFromListConfirm(field)} />
-                    </div>
+                    </React.Fragment>
                 }
             </div>
         );

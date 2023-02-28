@@ -3,6 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
+import React from "react";
 import { withTranslation } from "react-i18next";
 import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,33 +17,36 @@ function CardSideMenu({t, editor, cardside, canvas}) {
         <div>
             {cardside.renderer.data.fields.selected.length > 0 &&
                 <Menu id={'carddesign_menu_' + sideType}>
-                    <Item onClick={() => cardside.editField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-edit"]} />
-                        <span>Edit Properties</span>
-                    </Item>
-                    <Item onClick={() => cardside.editInternalField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-edit"]} />
-                        <span>Edit Internal Properties</span>
-                    </Item>
-                    <Item onClick={() => cardside.editConditionalRenderingField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-edit"]} />
-                        <span>Conditional Rendering</span>
-                    </Item>
+                    {cardside.renderer.data.fields.selected.length === 1 &&
+                        <React.Fragment>
+                            <Item onClick={() => cardside.editField()}>
+                                <span><FontAwesomeIcon icon={["fas", "fa-edit"]} /> {t('menu.edit')}</span>
+                            </Item>
+                            {cardside.renderer.data.fields.selected[0].options.border &&
+                                <Item onClick={() => cardside.editFieldBorder()}>
+                                    <span><FontAwesomeIcon icon={["fas", "fa-border-none"]} /> {t('menu.editborder')}</span>
+                                </Item>
+                            }
+                            <Item onClick={() => cardside.editInternalField()}>
+                                <span><FontAwesomeIcon icon={["fas", "fa-edit"]} /> {t('menu.editinternal')}</span>
+                            </Item>
+                            <Item onClick={() => cardside.editConditionalRenderingField()}>
+                                <span><FontAwesomeIcon icon={["fas", "fa-arrows-to-eye"]} /> {t('menu.editconditional')}</span>
+                            </Item>
+                        </React.Fragment>
+                    }
                     <Item onClick={() => cardside.renderer.features.fields.cutField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-cut"]} />
-                        <span>Cut</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-cut"]} /> {t('menu.cut')}</span>
                     </Item>
                     <Item onClick={() => cardside.renderer.features.fields.copyField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-copy"]} />
-                        <span>Copy</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-copy"]} /> {t('menu.copy')}</span>
                     </Item>
                     <Item onClick={() => cardside.renderer.features.fields.deleteField()}>
-                        <FontAwesomeIcon icon={["fas", "fa-remove"]} />
-                        <span>{t('common.delete')}</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-remove"]} /> {t('menu.delete')}</span>
                     </Item>
                     <Separator />
                     <Item onClick={() => cardside.renderer.features.fields.unselectField()}>
-                        <span>Unselect</span>
+                        <span>{t('menu.unselect')}</span>
                     </Item>
                 </Menu>
             }
@@ -50,28 +54,27 @@ function CardSideMenu({t, editor, cardside, canvas}) {
             {cardside.renderer.data.fields.selected.length === 0 &&
                 <Menu id={'carddesign_menu_' + sideType}>
                     <Item onClick={({ event }) => cardside.renderer.features.fields.pasteFieldAtMousePos(event, canvas.current)}>
-                        <FontAwesomeIcon icon={["fas", "fa-paste"]} />
-                        <span>Paste</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-paste"]} /> {t('menu.paste')}</span>
                     </Item>
                     <Item onClick={() => editor.undoTemplate()} disabled={editor.state.snapshots.undo.length <= 1}>
-                        <span>Undo</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-rotate-left"]} /> {t('menu.undo')}</span>
                     </Item>
                     <Item onClick={() => editor.redoTemplate()} disabled={editor.state.snapshots.redo.length <= 1}>
-                        <span>Redo</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-rotate-right"]} /> {t('menu.redo')}</span>
                     </Item>
                     <Item onClick={() => editor.viewHistory()} disabled={editor.state.snapshots.undo.length <= 1 && editor.state.snapshots.redo.length <= 0}>
-                        <span>History...</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-clock-rotate-left"]} /> {t('menu.history')}</span>
                     </Item>
                     <Separator />
                     <Item onClick={({ event }) => cardside.addFieldFromList(event, canvas.current)}>
-                        <span>Add field from list...</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-list"]} /> {t('menu.addfieldfromlist')}</span>
                     </Item>
                     <Item onClick={() => cardside.editGrid()}>
-                        <span>View Settings...</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-border-all"]} /> {t('menu.viewsettings')}</span>
                     </Item>
                     <Separator />
                     <Item onClick={() => cardside.editBackground()}>
-                        <span>Set Background...</span>
+                        <span><FontAwesomeIcon icon={["fas", "fa-paint-roller"]} /> {t('menu.background')}</span>
                     </Item>
                 </Menu>
             }

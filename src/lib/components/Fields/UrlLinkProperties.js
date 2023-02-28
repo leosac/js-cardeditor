@@ -17,8 +17,6 @@ function UrlLinkProperties({t, field, show, editor, onClose, onSubmit}) {
     const [fontSize, setFontSize] = useState(field.fontSize);
     const [fontStyle, setFontStyle] = useState(field.fontStyle);
     const [colorFill, setColorFill] = useState(field.colorFill);
-    const [borderWidth, setBorderWidth] = useState(field.borderWidth);
-    const [borderColor, setBorderColor] = useState(field.borderColor ?? '#000000');
     const [autoSize, setAutoSize] = useState(field.autoSize);
     const [autoFontScale, setAutoFontScale] = useState(field.autoFontScale);
 
@@ -31,8 +29,6 @@ function UrlLinkProperties({t, field, show, editor, onClose, onSubmit}) {
                 fontSize: fontSize,
                 fontStyle: fontStyle,
                 colorFill: colorFill,
-                borderWidth: borderWidth,
-                borderColor: borderColor,
                 autoSize: autoSize,
                 autoFontScale: autoFontScale
             });
@@ -77,14 +73,6 @@ function UrlLinkProperties({t, field, show, editor, onClose, onSubmit}) {
             <Form.Group>
                 <Form.Label>{t('properties.colorfill')}</Form.Label>
                 <ColorPicker color={colorFill} onChange={setColorFill} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.borderwidth')}</Form.Label>
-                <Form.Control type="number" min="0" max="1" placeholder="1" value={borderWidth} onChange={e => setBorderWidth(e.target.value)} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.bordercolor')}</Form.Label>
-                <ColorPicker color={borderColor} onChange={setBorderColor} />
             </Form.Group>
             <Form.Group>
                 <Form.Check type="checkbox" label= {t('properties.autosize')} checked={autoSize} onChange={e => setAutoSize(e.target.checked)} />

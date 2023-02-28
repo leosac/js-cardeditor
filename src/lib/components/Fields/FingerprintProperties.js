@@ -48,14 +48,14 @@ function FingerprintProperties({t, field, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <fieldset>
                 <legend>{t('properties.targets')}</legend>
-                <button href="#" onClick={addTarget()} className="multiple_text_input_add btn btn-link">{t('properties.add_fingerprint_target')}</button>
+                <button href="#" onClick={() => addTarget()} className="multiple_text_input_add btn btn-link">{t('properties.add_fingerprint_target')}</button>
                 <hr />
                 {targets.map((target, index) => {
                     return (
                         <Form.Group key={index}>
                             <Form.Label>{t('properties.fingerprint_target')}</Form.Label>
                             <Form.Control type="text" value={target} onChange={e => updateTarget(index, e.target.value)} />
-                            <button href="#" onClick={removeTarget(index)} className="multiple_text_input_remove btn btn-link">{t('common.remove')}</button>
+                            <button href="#" onClick={() => removeTarget(index)} className="multiple_text_input_remove btn btn-link">{t('common.remove')}</button>
                         </Form.Group>
                     )
                 })}

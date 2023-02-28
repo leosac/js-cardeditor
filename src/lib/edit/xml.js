@@ -78,15 +78,13 @@ function toDPF()
     xml += '<CardSides z:Id="' + ++oid + '" z:Size="2">\n';
     this.getSides.call(this, true).forEach(sideType => {
         const cardRef = this.sides[sideType].graphics.card;
-        if (cardRef)
-        {
+        if (cardRef) {
             //Inverse size regarding orientation
             if (this.state.orientation === "Portrait")
                 this.layouts['px'][this.state.currentlayout] = [this.layouts['px'][this.state.currentlayout][0], this.layouts['px'][this.state.currentlayout][1]];
 
             xml += '<CardSide z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.CardSide">\n';
-            if (cardRef.options.background.picture !== '')
-            {
+            if (cardRef.options.background.picture !== '') {
                 xml += '<BackgroundImage z:Id="' + ++oid + '">';
                 if (cardRef.options.background.picture !== undefined &&
                     cardRef.options.background.picture.length > 0)
@@ -98,9 +96,7 @@ function toDPF()
 
                 xml += '<BackgroundImageLayout>' + cardRef.options.background.picture_layout
                     + '</BackgroundImageLayout>\n';
-            }
-            else
-            {
+            } else {
                 // No background image
                 xml += '<BackgroundImage i:nil="true" />\n';
                 xml += '<BackgroundImageLayout>3</BackgroundImageLayout>\n';
@@ -110,24 +106,18 @@ function toDPF()
             xml += '<ContactChipLocation>0</ContactChipLocation>\n';
             var fields = '';
             var nbfields = 0;
-            if (cardRef.children && cardRef.children.length > 0)
-            {
-                for (var f = 0; f < cardRef.children.length; ++f)
-                {
+            if (cardRef.children && cardRef.children.length > 0) {
+                for (var f = 0; f < cardRef.children.length; ++f) {
                     var child = cardRef.getChildAt(f);
-                    if (child.options !== undefined && child.options.type !== undefined)
-                    {
+                    if (child.options !== undefined && child.options.type !== undefined) {
                         let value = child.options.value;
-                        if (child.options.type === 'picture')
-                        {
-                            if (value !== undefined && value.length > 0)
-                            {
+                        if (child.options.type === 'picture') {
+                            if (value !== undefined && value.length > 0) {
                                 value = a2hex(atob(value.split(',')[1]));
                             }
                         }
                         let prop = '';
-                        if (child.options.conditionalRenderingEntries)
-                        {
+                        if (child.options.conditionalRenderingEntries) {
                             prop += '<ConditionalRenderingEntries z:Id="' + ++oid + '" z:Size="' + child.options.conditionalRenderingEntries.length + '">\n';
                             for (var c = 0; c < child.options.conditionalRenderingEntries.length; ++c)
                             {
@@ -150,18 +140,14 @@ function toDPF()
                         prop += '<Name z:Id="' + ++oid + '">' + xml_escape(child.options.name) + '</Name>\n';
 
                         // We do not serialize the property if the rotation angle is not set.
-                        if (child.options.rotation !== 0)
-                        {
+                        if (child.options.rotation !== 0) {
                             prop += '<RotationAngle>' + Math.round(child.options.rotation) + '</RotationAngle>\n';
                         }
                         
                         prop += '<UseMacros>' + child.options.useMacros + '</UseMacros>\n';
-                        if (value !== undefined)
-                        {
+                        if (value !== undefined) {
                             prop += '<Value z:Id="' + ++oid + '">' + xml_escape(value) + '</Value>\n';
-                        }
-                        else
-                        {
+                        } else {
                             prop += '<Value z:Id="' + ++oid + '" i:nil="true" />\n';
                         }
 
@@ -173,8 +159,7 @@ function toDPF()
                         prop += '<YPosition>' + Math.round(child.options.y) + '</YPosition>\n';
                         prop += '<ZIndex>' + Math.round(child.options.zIndex) + '</ZIndex>\n';
 
-                        if (child.options.type === 'label')
-                        {
+                        if (child.options.type === 'label') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.TextField">\n';
                             prop += '<Align z:Id="' + ++oid + '">' + CardHelper.export_default(child.options.align, 'TopLeft') + '</Align>\n';
                             prop += '<AutoFontResize>' + child.options.scaleFont + '</AutoFontResize>\n';
@@ -207,23 +192,20 @@ function toDPF()
                             prop += '<WordBreak>' + child.options.wordBreak + '</WordBreak>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'picture')
-                        {
+                        } else if (child.options.type === 'picture') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.PictureField">\n';
                             prop += '<HasBorder>' + (child.options.borderWidth > 0) + '</HasBorder>\n';
                             prop += '<KeepFileReference>false</KeepFileReference>\n';
                             prop += '<SizeMode>4</SizeMode>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'barcode')
-                        {
+                        } else if (child.options.type === 'barcode') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.BarcodeField">\n';
                             prop += '<Font z:Id="' + ++oid + '">' + child.options.fontFamily + '</Font>\n';
                             prop += '<Size>' + child.options.fontSize + '</Size>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'qrcode')
-                        {
+                        } else if (child.options.type === 'qrcode') {
                             var eclevels = {L: 0, M: 1, Q: 2, H: 3};
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.QRCodeField">\n';
                             prop += '<ErrorCorrection>' + eclevels[child.options.ecLevel] + '</ErrorCorrection>\n';
@@ -231,23 +213,20 @@ function toDPF()
                             prop += '<Version>4</Version>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'pdf417')
-                        {
+                        } else if (child.options.type === 'pdf417') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.PDF417Field">\n';
                             prop += '<Color>' + xml_color(child.options.color, true) + '</Color>\n';
                             prop += '<ErrorCorrection>' + child.options.ecLevel + '</ErrorCorrection>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'dataMatrix')
-                        {
+                        } else if (child.options.type === 'datamatrix') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.DatamatrixField">\n';
                             prop += '<Color>' + xml_color(child.options.color, true) + '</Color>\n';
                             prop += '<Scheme>' + child.options.Scheme + '</Scheme>\n';
                             prop += '<SizeIdx>' + child.options.SizeIdx + '</SizeIdx>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'fingerprint')
-                        {
+                        } else if (child.options.type === 'fingerprint') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.Fingerprint">\n';
                             prop += '<AutoRequest>' + child.options.autoRequest + '</AutoRequest>\n';
                             prop += '<Targets>';
@@ -257,17 +236,14 @@ function toDPF()
                             prop += '</Targets>';
                             fields += prop;
                             fields += '</Field>\n';
-                        }
-                        else if (child.options.type === 'rectangle')
-                        {
+                        } else if (child.options.type === 'rectangle') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.RectangleShapeField">\n';
                             prop += '<BorderColor>' + xml_color(child.options.borderColor, true) + '</BorderColor>\n';
                             prop += '<BorderWidth>' + child.options.borderWidth + '</BorderWidth>\n';
                             prop += '<Color>' + xml_color(child.options.color, true) + '</Color>\n';
                             fields += prop;
                             fields += '</Field>\n';
-                        } else if (child.options.type === 'circle')
-                        {
+                        } else if (child.options.type === 'circle') {
                             fields += '<Field z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.CircleShapeField">\n';
                             prop += '<BorderColor>' + xml_color(child.options.borderColor, true) + '</BorderColor>\n';
                             prop += '<BorderWidth>' + child.options.borderWidth + '</BorderWidth>\n';
@@ -295,8 +271,7 @@ function toDPF()
     });
     xml += '</CardSides>\n';
     xml += '<Category i:nil="true" />\n';
-    if (this.state.creationDate)
-    {
+    if (this.state.creationDate) {
         if (typeof this.state.creationDate === 'object')
             xml += '<CreationDate>' + this.state.creationDate.toISOString() + '</CreationDate>\n';
         else
@@ -306,16 +281,12 @@ function toDPF()
         xml += '<CreationDate>' + currentDate + '</CreationDate>\n';
     xml += '<EditPassword i:nil="true" />\n';
     xml += '<FieldsRepository i:nil="true" />\n';
-    if (this.state.isRectoVerso)
-    {
+    if (this.state.isRectoVerso) {
         xml += '<HasVerso>true</HasVerso>\n';
-    }
-    else
-    {
+    } else {
         xml += '<HasVerso>false</HasVerso>\n';
     }
-    if (this.state.lastEdit)
-    {
+    if (this.state.lastEdit) {
         if (typeof this.state.lastEdit === 'object')
             xml += '<ModifiedDate>' + this.state.lastEdit.toISOString() + '</ModifiedDate>\n';
         else
@@ -343,11 +314,9 @@ function linkXMLIdRef($template)
     let fontSideFields = $template.children('CardSides').children('CardSide').first().children("fields").children();
     let backSideFields = $template.children('CardSides').children('CardSide').last().children("fields").children();
     let mapFields = {};
-    for (let sideToGet = 0; sideToGet <= 1; sideToGet++)
-    {
+    for (let sideToGet = 0; sideToGet <= 1; sideToGet++) {
         let side = sideToGet === 0 ? fontSideFields : backSideFields;
-        for (let i = 0; side[i]; i++)
-        {
+        for (let i = 0; side[i]; i++) {
             let val = $(side[i]);
             $.each(val, function(){
                 if ($(this).children("value").attr("z:Id"))
@@ -355,11 +324,9 @@ function linkXMLIdRef($template)
             })
         }
     }
-    for (let sideToGet = 0; sideToGet <= 1; sideToGet++)
-    {
+    for (let sideToGet = 0; sideToGet <= 1; sideToGet++) {
         let side = sideToGet === 0 ? fontSideFields : backSideFields;
-        for (let i = 0; side[i]; i++)
-        {
+        for (let i = 0; side[i]; i++) {
             let val = $(side[i]);
             $.each(val, function(){
                 if ($(this).children("value").attr("z:Ref"))
@@ -374,7 +341,7 @@ async function loadDPF($xml)
     let $template = $xml.find('Template');
     this.setState({
         name: $template.children('Name').text(),
-        orientation: $template.children('Orientation').text() 
+        orientation: $template.children('Orientation').text().toLowerCase() 
     })
 
     linkXMLIdRef($template);
@@ -416,8 +383,7 @@ async function loadDPF($xml)
     await this.sides['recto'].createCardStage(this.state.layout, this.state.orientation, getCardSideTemplate(recto), false);
 
     let verso;
-    if ($template.children('HasVerso').text() === 'true')
-    {
+    if ($template.children('HasVerso').text() === 'true') {
         this.setState({ isRectoVerso: true });
         verso = $template.children('CardSides').children('CardSide').last();
     }
@@ -447,16 +413,13 @@ function getCardSideTemplate($xside) {
 
             const font = $this.children('Font').text().split(',');
             let fontStyle;
-            if (font.length > 2)
-            {
+            if (font.length > 2) {
                 var fontext = font[2].split('=');
-                if (fontext.length === 2 && fontext[0].trim() === 'style')
-                {
+                if (fontext.length === 2 && fontext[0].trim() === 'style') {
                     fontStyle = fontext[1].trim();
                 }
             }
-            if (ftype === 'DataPrinter.Core.Objects.TextField')
-            {
+            if (ftype === 'DataPrinter.Core.Objects.TextField') {
                 const colorFill = $this.children('ColorFill').text();
                 field = {
                     type: 'label',
@@ -483,9 +446,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.URLLinkField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.URLLinkField') {
                 const colorFill = $this.children('ColorFill').text();
                 field = {
                     type: 'urllink',
@@ -509,9 +470,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.BarcodeField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.BarcodeField') {
                 field = {
                     type: 'barcode',
                     name: $this.children('Name').text(),
@@ -527,9 +486,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.QRCodeField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.QRCodeField') {
                 const eclevels = ['L', 'M', 'Q', 'H'];
                 field = {
                     type: 'qrcode',
@@ -545,9 +502,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.Pdf417Field')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.Pdf417Field') {
                 const colorFill = $this.children('ColorFill').text();
                 field = {
                     type: 'pdf417',
@@ -565,9 +520,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.DatamatrixField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.DatamatrixField') {
                 const colorFill = $this.children('ColorFill').text();
                 field = {
                     type: 'datamatrix',
@@ -586,9 +539,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.Fingerprint')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.Fingerprint') {
                 const targets = [];
                 const obj = $this.children('Targets');
                 obj.children('Target').each((idx) => {
@@ -608,9 +559,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.PictureField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.PictureField') {
                 let data = $this.children('Value').text();
                 if (data !== undefined && data !== '' && data.trim() !== '') {
                     data = 'data:image/png;base64,' + btoa(hex2a(data));
@@ -632,9 +581,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.RectangleShapeField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.RectangleShapeField') {
                 field = {
                     type: 'rectangle',
                     name: $this.children('Name').text(),
@@ -650,9 +597,7 @@ function getCardSideTemplate($xside) {
                     rotation: Number($this.children('RotationAngle').text()),
                     conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
                 };
-            }
-            else if (ftype === 'DataPrinter.Core.Objects.CircleShapeField')
-            {
+            } else if (ftype === 'DataPrinter.Core.Objects.CircleShapeField') {
                 field = {
                     type: 'circle',
                     name: $this.children('Name').text(),

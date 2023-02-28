@@ -43,7 +43,7 @@ function BarcodeProperties({t, field, show, editor, onClose, onSubmit}) {
                 <Form.Control as="select" value={fontFamily} onChange={e => setFontFamily(e.target.value)}>
                     {CardHelper.getBarcodes().map((barcode) => {
                         return (
-                            <option key={barcode.code}>{barcode.name}</option>
+                            <option key={barcode.code} value={barcode.code}>{barcode.name}</option>
                         )
                     })}
                 </Form.Control>

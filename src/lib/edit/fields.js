@@ -15,6 +15,17 @@ function editInternalField()
     }
 }
 
+function editFieldBorder()
+{
+    if (this.renderer.data.fields.selected.length > 0)
+    {
+        this.setState({
+            show_fieldborder: true
+        });
+        this.renderer.sortByZIndex();
+    }
+}
+
 function editConditionalRenderingField()
 {
     if (this.renderer.data.fields.selected.length > 0)
@@ -72,5 +83,5 @@ async function addFieldFromListConfirm(f)
 }
 
 export {
-    editField, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm
+    editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm
 }

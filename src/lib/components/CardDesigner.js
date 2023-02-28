@@ -94,7 +94,7 @@ class CardDesigner extends React.Component {
             cardheight: 0,
             cardborder: 3,
             currentlayout: CardHelper.getLayouts(this.props.enabledCardSizes)[0].value,
-            orientation: 'Landscape'
+            orientation: 'landscape'
         }
     }
 
@@ -475,8 +475,8 @@ class CardDesigner extends React.Component {
                         <Form.Group className="col-md-6">
                             <Form.Label>{t('create.orientation')}</Form.Label>
                             <Form.Control as="select" value={this.state.orientation} onChange={e => this.changeOrientation(e.target.value)}>
-                                <option value='Landscape'>{t('create.orientation_landscape')}</option>
-                                <option value='Portrait'>{t('create.orientation_portrait')}</option>
+                                <option value='landscape'>{t('create.orientation_landscape')}</option>
+                                <option value='portrait'>{t('create.orientation_portrait')}</option>
                             </Form.Control>
                         </Form.Group>
                     </div>
@@ -569,7 +569,7 @@ class CardDesigner extends React.Component {
                                                 <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('common.codes')}</span>)}>
                                                     <NavDropdown.Item id={sideType + '_factory_barcode'} href="#barcode" onClick={() => this.changeFactory('barcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.barcode')}</NavDropdown.Item>
                                                     <NavDropdown.Item id={sideType + '_factory_qrcode'} href="#qrcode" onClick={() => this.changeFactory('qrcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.qrcode')}</NavDropdown.Item>
-                                                    <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('dataMatrix', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
+                                                    <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('datamatrix', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
                                                     <NavDropdown.Item id={sideType + '_factory_pdf417'} href="#pdf417" onClick={() => this.changeFactory('pdf417', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.pdf417')}</NavDropdown.Item>
                                                 </NavDropdown>
                         

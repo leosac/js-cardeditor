@@ -1,8 +1,8 @@
 {
-  "name": "cardeditor",
+  "name": "@leosac/cardeditor",
   "version": "1.0.0",
   "description": "Create Visual Card Templates",
-  "main": "cardeditor.js",
+  "main": "dist/cardeditor.js",
   "directories": {
     "example": "example"
   },
@@ -10,7 +10,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@leosac/cardrendering": "file:../js-cardrendering",
+    "@leosac/cardrendering": "^1.1.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -63,7 +63,7 @@
   },
   "author": "leosac",
   "organization": "leosac",
-  "license": "LGPLv3",
+  "license": "LGPL-3.0-or-later",
   "homepage": "https://leosac.com",
   "browserslist": {
     "production": [
@@ -76,5 +76,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/leosac/js-cardeditor/issues"
+  },
+  "keywords": [
+    "card",
+    "printing",
+    "template",
+    "cr-80",
+    "editor",
+    "leosac"
+  ]
 }

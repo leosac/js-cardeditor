@@ -17,8 +17,6 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
     const [fontSize, setFontSize] = useState(field.fontSize);
     const [fontStyle, setFontStyle] = useState(field.fontStyle);
     const [colorFill, setColorFill] = useState(field.colorFill);
-    const [borderWidth, setBorderWidth] = useState(field.borderWidth);
-    const [borderColor, setBorderColor] = useState(field.borderColor ?? '#000000');
     const [align, setAlign] = useState(field.align);
     const [maxLength, setMaxLength] = useState(field.maxLength);
     const [autoSize, setAutoSize] = useState(field.autoSize);
@@ -34,8 +32,6 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
                 fontSize: fontSize,
                 fontStyle: fontStyle,
                 colorFill: colorFill,
-                borderWidth: borderWidth,
-                borderColor: borderColor,
                 align: align,
                 maxLength: maxLength,
                 autoSize: autoSize,
@@ -83,14 +79,6 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
             <Form.Group>
                 <Form.Label>{t('properties.colorfill')}</Form.Label>
                 <ColorPicker color={colorFill} onChange={setColorFill} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.borderwidth')}</Form.Label>
-                <Form.Control type="number" min="0" max="1" placeholder="1" value={borderWidth} onChange={e => setBorderWidth(e.target.value)} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.bordercolor')}</Form.Label>
-                <ColorPicker color={borderColor} onChange={setBorderColor} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.align')}</Form.Label>

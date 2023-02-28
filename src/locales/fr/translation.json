@@ -145,7 +145,8 @@
     "addentry": "Ajouter une nouvelle condition",
     "addfield": "Ajouter un champ",
     "printfields": "Champs à imprimer",
-    "currentimage": "Image actuelle"
+    "currentimage": "Image actuelle",
+    "prop_border": "Bordure"
   }
   ,"macros": {
     "tooltip": "$TIMESTAMP(DateTime[, input Format])\n$DATE(DateTime, output Format [, input Format])\n$UPP(x)\n$LOW(x)\n$BIN(x) - $BIN(text, encoding)\n$DEC(x)\n$HEX(x)\n$ASCII(x)\n$LSB(x)\n$TRC_LEFT(<number>, x)\n$TRC_RIGHT(<number>, x)\n$STR(x)\n$REV(<number>, x)\n$PAD_LEFT(<number>, <padding_char>, x)\n$PAD_RIGHT(<number>, <padding_char>, x)\n$PAD_BOTH(<number>, <padding_char>, x)\n$TRIM_START(<trim_char>, x)\n$TRIM_END(<trim_char>, x)\n$TRIM_BOTH(<trim_char>, x)\n$SUB(<start>, <length>, x)\n$HEXSTR(x) - $HEXSTR(text, encoding) - $HEXSTR(text, encoding, forceHexInput)\n$EXPLODE(<index>, <separator>, x)\n$CONTAINS(needle, x[, success][, error])\n$DECADD(<dec_number>, <dec_number>)\n$DECSUB(<dec_number>, <dec_number>)\n$DECDIV(<dec_number>, <dec_number>)\n$DECMUL(<dec_number>, <dec_number>)\n$DECMOD(<dec_number>, <dec_number>)\n$DECPOW(<dec_number>, <dec_number>)\n$RAND(<minvalue>, <maxvalue>)"
@@ -226,5 +227,22 @@
     "you": "Vous",
     "codes": "Scan codes",
     "unprintable": "Non impressible"
+  },
+  "menu": {
+    "edit": "Propriétés",
+    "editborder": "Propriétés de la bordure",
+    "editinternal": "Propriétés internes",
+    "editconditional": "Rendu conditionnel",
+    "cut": "Couper",
+    "copy": "Copier",
+    "delete": "Supprimer",
+    "unselect": "Désélectionner",
+    "paste": "Coller",
+    "undo": "Annuler",
+    "redo": "Refaire",
+    "history": "Historique...",
+    "addfieldfromlist": "Ajouter un champ à partir de la liste...",
+    "viewsettings": "Paramètres d'affichage...",
+    "background": "Définir l'arrière-plan..."
   }
 }

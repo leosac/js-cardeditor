@@ -19,7 +19,7 @@ function newCard(layout)
 {
     this.setState({
         name: '',
-        orientation: (layout !== 'cr80' && layout !== "custom") ? 'Portrait' : 'Landscape'
+        orientation: (layout !== 'cr80' && layout !== "custom") ? 'portrait' : 'landscape'
     });
 
     return Promise.all(this.getSides.call(this).map(async sideType => {
