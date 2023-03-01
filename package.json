@@ -10,7 +10,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@leosac/cardrendering": "^1.1.2",
+    "@leosac/cardrendering": "^1.3.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -24,8 +24,7 @@
     "jquery": "^3.6.3",
     "jquery-ui": "^1.13.2",
     "moment": "^2.29.4",
-    "npm-check-updates": "^16.6.3",
-    "pixi.js-legacy": "^7.1.2",
+    "pixi.js": "^7.1.3",
     "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-bootstrap": "^1.6.6",
@@ -34,7 +33,8 @@
     "react-dom": "^18.2.0",
     "react-filerobot-image-editor": "^4.3.8",
     "react-i18next": "^12.1.5",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@alienfast/i18next-loader": "^2.0.1",
@@ -82,10 +82,15 @@
   },
   "keywords": [
     "card",
+    "access card",
+    "credit card",
     "printing",
+    "print",
     "template",
     "cr-80",
+    "cr80",
     "editor",
+    "designer",
     "leosac"
   ]
 }

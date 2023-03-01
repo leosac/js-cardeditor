@@ -1,20 +1,23 @@
-# JsCardRendering
+# JS-CardEditor [![Build Status](https://github.com/leosac/js-cardeditor/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/leosac/js-cardeditor/actions/workflows/node.js.yml)
+JS-CardEditor is a React component used to create/edit card printing templates.
+It works with node.js and web browsers (once packaged with webpack).
 
-JS-CardRendering is a React component used to make card printing templates.
-It works with node.js and web browsers (one packaged with webpack).
+![CardEditor Demo](https://github.com/leosac/js-cardeditor/blob/master/public/demo-cardeditor.gif?raw=true)
 
-## Pre-Required
+Related projects:
+ * [js-cardrendering](https://github.com/leosac/js-cardrendering): the card rendering engine used by this project
+ * [card-printing-worker](https://github.com/leosac/card-printing-worker): a node server providing REST API for bitmap generation/printing
+ * [leosac-credential-provisioning](https://leosac.com/credential-provisioning/): a complete professional card provisioning solution for both card encoding and printing
 
+## Prerequisites
 You need React >= 18
 
 ## Installation
-
-`npm install @leosac/js-cardrendering --save`
+`npm install @leosac/js-cardeditor --save`
 
 ## Usage
-
 ```js
-import { CardDesigner } from "@leosac/js-cardrendering";
+import { CardDesigner } from "@leosac/js-cardeditor";
 
 /* Import bootstrap css if missing */
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,13 +30,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
 ```
 
-If you correctly made the previous steps, the package is now installed in your project.
-
 ## From source
-
 ```bash
-git clone https://github.com/leosac/js-cardrendering.git
-cd "js-cardrendering"
+git clone https://github.com/leosac/js-cardeditor.git
+cd "js-cardeditor"
 npm install
 ```
 
@@ -53,12 +53,9 @@ npm run test
 ```
 
 ## Parameters
+Several parameters can be optionally passed to the component.
 
-Several properties can be optionally passed to the component.
-
-There is two parameters :
-
-    - content [`Object`]: Card Template (more informations inside "Load Card Template" section)
+    - content [`Object`]: Card Template
     - draggableFields [`Array`] (`{name : String, default_value: String}`): List of draggable fields
     - formatVersion [`String`] (`Default: Undefined`): Force a specific format version for the output (default to latest version)
     - enabledCardSizes [`Object` : Select cards templates you want to authorize. (more informations inside "Card Templates" section)
@@ -70,12 +67,9 @@ There is two parameters :
     - onEdit [`Function`] (`Param 1: Snapshot): Function called at each template changed / field edition (created, removed, resized, moved...)
     - onSubmit [`Function`] (): Enable the Submit button and trigger this function on submition
 
-#### NOTE : If "datas.content" is undefined, it create a new card template.
-
 ## Enable Card Sizes
-
 Parameter `enabledCardSizes` enable/disable templates size.
-To do it , you need to create a `Object` like this :
+To customize the allowed size list, create an `Object` like:
 
 ```js
 enabledCardSizes: {
@@ -87,8 +81,7 @@ enabledCardSizes: {
 }
 ```
 
-This is the current list of supported sizes :
-
+Current list of supported sizes:
   - `cr80` : Standard card size
   - `res_4to3` : 4/3 visual
   - `res_3to2` : 3/2 visual
@@ -98,7 +91,6 @@ This is the current list of supported sizes :
   - `custom` : Allow custom size
 
 ## Load Card Templates
-
 The function can take a card template in parameter `content`, useful if you want to edit a card directly after loading.
 
 It is recommended to use JSON format.
@@ -106,10 +98,8 @@ It is recommended to use JSON format.
 XML import and export is supported as well for compatibility reasons (.dpf files).
 
 ## Jquery
-
 Jquery is being used for some specific aspects of this component. This is not a best practice as it may conflict with React DOM management. Ideally, it will be further removed on a later version.
 
 # License
-
 This project has been created by Leosac SAS.
-The source of this library is released under LGPLv3 license.
+The source code of this library is released under LGPLv3 license.
