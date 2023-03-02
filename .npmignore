@@ -1,5 +1,4 @@
-build/temp
-dist/
+build/
 test/
 doc/
 node_modules/
