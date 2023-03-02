@@ -4,8 +4,7 @@ module.exports = {
   entry: './cardeditor.js',
   output: {
     filename: 'cardeditor.js',
-    library: 'cardeditor',
-    path: path.resolve(__dirname, 'dist'),
+    library: 'cardeditor'
   },
   module: {
     rules: [
