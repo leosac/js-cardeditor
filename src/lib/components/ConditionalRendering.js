@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DesignerModal from "./DesignerModal";
 
 function ConditionalRendering({t, entries, show, onClose, onSubmit}) {
@@ -49,9 +50,8 @@ function ConditionalRendering({t, entries, show, onClose, onSubmit}) {
     return (
         <DesignerModal id="conditional_rendering" show={show} confirm={t('properties.update')} title={t('properties.conditional_rendering')} onClose={onClose} onSubmit={modalSubmit}>
             <div>
-                <button type="button" className="btn btn-sm add_entry" onClick={addEntry}>
-                    <span className=" fas fa-plus-circle" style={{color: 'green'}} aria-hidden="true"></span>
-                    {t('properties.addentry')}
+                <button className="btn btn-sm add_entry" onClick={() => addEntry()}>
+                    <FontAwesomeIcon icon={["fas", "fa-plus-circle"]} style={{color: 'green'}} /> {t('properties.addentry')}
                 </button>
             </div>
             <div id="conditional_rendering_entries">
@@ -79,7 +79,7 @@ function ConditionalRendering({t, entries, show, onClose, onSubmit}) {
                             </Form.Group>
                             <Form.Group className="col-md-3">
                                 <Form.Label>{t('common.action')}</Form.Label>
-                                <a className="btn btn-danger remove_entry form-control" onClick={removeEntry(index)}>{t('common.remove')}</a>
+                                <button className="btn btn-danger remove_entry form-control" onClick={() => removeEntry(index)}>{t('common.remove')}</button>
                             </Form.Group>
                         </div>
                     )
