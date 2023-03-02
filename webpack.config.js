@@ -1,10 +1,8 @@
-const path = require('path');
-
 module.exports = {
   entry: './cardeditor.js',
   output: {
     filename: 'cardeditor.js',
-    library: 'cardeditor'
+    library: 'cardeditor',
   },
   module: {
     rules: [
