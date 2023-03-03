@@ -3,15 +3,11 @@
  *
  * @license GNU LGPL version 3
  **/
-
-import $ from 'jquery';
-import {
-    toDPF, loadDPF, reloadTemplate
-} from './xml';
+import { getTemplate, loadTemplate, reloadTemplate } from './json';
 
 async function printTemplate()
 {
-    const data = this.sides.recto.data;
+    const data = this.sides.front.data;
     if (data.grid.enabled){
         this.getSides.call(this).forEach(sideType => {
             const renderer = this.sides[sideType];
@@ -26,19 +22,19 @@ async function printTemplate()
     data.card.border = 0;
     await reloadTemplate.call(this);
 
-    // If we're in recto/verso mode, we need twice the height.
+    // If we're in front/back mode, we need twice the height.
     let height = 0;
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
         height += renderer.graphics.renderer.view.height;
     });
 
-    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides['recto'].graphics.renderer.view.width);
+    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides.front.graphics.renderer.view.width);
     mywindow.document.write('<html><head><title>Card</title>');
-    if (this.state.currentlayout === 'cr80') {
+    if (this.state.layout.size === 'cr80') {
         mywindow.document.write('<style>@page { size: 85.725mm 53.975mm; margin: 0; } body { overflow-x: visible; overflow-y: visible; }</style>');
     }
-    mywindow.document.write('</head><body >');
+    mywindow.document.write('</head><body>');
 
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
@@ -98,9 +94,8 @@ function printCard()
 
 async function printCardConfirm(values)
 {
-    // Duplicate template
-    const xmldoc = $.parseXML(toDPF.call(this));
-    const $xml = $(xmldoc);
+    // Save copy of the current template
+    const oldtpl = getTemplate.call(this);
 
     // Update values from form. For each side if need be.
     this.getSides.call(this).forEach(sideType => {
@@ -130,7 +125,7 @@ async function printCardConfirm(values)
     await printTemplate.call(this);
 
     // Restore template
-    await loadDPF.call(this, $xml);
+    await loadTemplate.call(this, oldtpl);
 }
 
 export {

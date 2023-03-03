@@ -3,9 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import {
-    reloadTemplate
-} from './xml';
+import { reloadTemplate } from './json';
 
 function editGrid()
 {
@@ -21,8 +19,7 @@ function editGridConfirm(grid)
     const oldruler = this.renderer.data.grid.ruler;
 
     const options = Object.keys(grid);
-    options.forEach((key) =>
-    {
+    options.forEach((key) => {
         this.renderer.data.grid[key] = grid[key];
     });
 

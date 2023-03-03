@@ -63,9 +63,9 @@
     "invalidFormatVersion": "Invalid Format version. Output format or some features can be uncompatible with your version."
   },
   "properties": {
-    "recto_verso": "Recto / Verso",
-    "recto": "Recto",
-    "verso": "Verso",
+    "front_back": "Has a Back side",
+    "front": "Front",
+    "back": "Back",
     "background_type": "Background Type",
     "auto_request": "Auto Request",
     "update": "Update",

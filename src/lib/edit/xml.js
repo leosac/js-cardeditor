@@ -16,8 +16,7 @@ function xml_color(color, transparency)
 
 function xml_escape(value)
 {
-    if (value === undefined)
-    {
+    if (value === undefined) {
         return '';
     }
 
@@ -31,8 +30,7 @@ function xml_escape(value)
 function parseConditionalRenderingEntries($xml)
 {
     let entries = [];
-    $xml.children('ConditionalRenderingEntry').each(function ()
-    {
+    $xml.children('ConditionalRenderingEntry').each(function () {
         const $this = $(this);
         entries.push({
             condition: $this.children('Condition').text(),
@@ -46,13 +44,10 @@ function parseConditionalRenderingEntries($xml)
 //Used for compatibility between pre format version 4.0.0.0
 function getBorderWidth(field)
 {
-    if (field.children('BorderSize'))
-    {
+    if (field.children('BorderSize')) {
         //Since 4.0.0.0
         return (Number(field.children('BorderSize').text()));
-    }
-    else if (field.children('HasBorder'))
-    {
+    } else if (field.children('HasBorder')) {
         //Pre 4.0.0.0
         if (field.children('HasBorder').text() === "true")
             return (1);
@@ -80,8 +75,8 @@ function toDPF()
         const cardRef = this.sides[sideType].graphics.card;
         if (cardRef) {
             //Inverse size regarding orientation
-            if (this.state.orientation === "Portrait")
-                this.layouts['px'][this.state.currentlayout] = [this.layouts['px'][this.state.currentlayout][0], this.layouts['px'][this.state.currentlayout][1]];
+            if (this.state.layout.orientation === "Portrait")
+                this.layoutsizes['px'][this.state.layout.size] = [this.layoutsizes['px'][this.state.layout.size][0], this.layoutsizes['px'][this.state.layout.size][1]];
 
             xml += '<CardSide z:Id="' + ++oid + '" i:type="d1p1:DataPrinter.Core.Objects.CardSide">\n';
             if (cardRef.options.background.picture !== '') {
@@ -260,12 +255,12 @@ function toDPF()
             xml += '</Fields>\n';
             //Used since format version 4.0.0.0, or without version
             if (this.state.formatVersion && CardHelper.checkVersion(this.state.formatVersion, "4.0.0.0") !== -1)
-                xml += '<HeightPx>' + this.layouts['px'][this.state.currentlayout][1] + '</HeightPx>\n';
+                xml += '<HeightPx>' + this.layoutsizes['px'][this.state.layout.size][1] + '</HeightPx>\n';
             xml += '<MagneticStripeLocation>0</MagneticStripeLocation>\n';
             xml += '<ShouldBePrinted>true</ShouldBePrinted>\n';
             //Used since format version 4.0.0.0, or without version
             if (this.state.formatVersion && CardHelper.checkVersion(this.state.formatVersion, "4.0.0.0") !== -1)
-                xml += '<WidthPx>' + this.layouts['px'][this.state.currentlayout][0] + '</WidthPx>\n';
+                xml += '<WidthPx>' + this.layoutsizes['px'][this.state.layout.size][0] + '</WidthPx>\n';
             xml += '</CardSide>\n';
         }
     });
@@ -281,7 +276,7 @@ function toDPF()
         xml += '<CreationDate>' + currentDate + '</CreationDate>\n';
     xml += '<EditPassword i:nil="true" />\n';
     xml += '<FieldsRepository i:nil="true" />\n';
-    if (this.state.isRectoVerso) {
+    if (this.state.hasBack) {
         xml += '<HasVerso>true</HasVerso>\n';
     } else {
         xml += '<HasVerso>false</HasVerso>\n';
@@ -295,7 +290,7 @@ function toDPF()
     else
         xml += '<ModifiedDate>' + currentDate + '</ModifiedDate>\n';
     xml += '<Name z:Id="' + ++oid + '">' + xml_escape($('#configuration_name').val()) + '</Name>\n';
-    xml += '<Orientation z:Id="' + ++oid + '">' + this.state.orientation + '</Orientation>\n';
+    xml += '<Orientation z:Id="' + ++oid + '">' + this.state.layout.orientation + '</Orientation>\n';
 
     //Used since format version 4.0.0.0, or without version
     if (this.state.preview && (!this.state.formatVersion || CardHelper.checkVersion(this.state.formatVersion, "4.0.0.0") !== -1))
@@ -341,8 +336,11 @@ async function loadDPF($xml)
     let $template = $xml.find('Template');
     this.setState({
         name: $template.children('Name').text(),
-        orientation: $template.children('Orientation').text().toLowerCase() 
-    })
+        layout: {
+            orientation: $template.children('Orientation').text().toLowerCase() ,
+            ...this.state.layout
+        }
+    });
 
     linkXMLIdRef($template);
     // If format version support customSize, customSize is enabled and template is from at least version 4.0.0.0
@@ -352,7 +350,7 @@ async function loadDPF($xml)
         $template.find('CardSide').first().children("widthpx")[0] &&
         $template.find('CardSide').first().children("widthpx")[0].textContent !== undefined)
     {
-        if ((this.state.layout === "cr80" || this.state.layout === "custom") &&
+        if ((this.state.layout.size === "cr80" || this.state.layout.size === "custom") &&
             (($template.find('Orientation') === 'Landscape' && (Number($template.find('CardSide').first().children("widthpx")[0].textContent) !== 445 || 
                                                                Number($template.find('CardSide').first().children("heightpx")[0].textContent) !== 280)) ||
             ($template.find('Orientation') === 'Portrait' && (Number($template.find('CardSide').first().children("widthpx")[0].textContent) !== 280 || 
@@ -366,28 +364,32 @@ async function loadDPF($xml)
             else
                 usedWH = [$template.find('CardSide').first().children("heightpx")[0].textContent, $template.find('CardSide').first().children("widthpx")[0].textContent];
 
-            this.setState({layout: "custom"});
+            this.setState({layout: {
+                    size: "custom",
+                    ...this.state.layout
+                }
+            });
         
-            this.layouts['px']['custom'][0] = Number(usedWH[0]);
-            this.layouts['mm']['custom'][0] = Number(Number(usedWH[0] / 5,2).toFixed(4));
-            this.layouts['in']['custom'][0] = Number(Number(Number(usedWH[0] / 5,2) / 25,4).toFixed(4));
+            this.layoutsizes['px']['custom'][0] = Number(usedWH[0]);
+            this.layoutsizes['mm']['custom'][0] = Number(Number(usedWH[0] / 5,2).toFixed(4));
+            this.layoutsizes['in']['custom'][0] = Number(Number(Number(usedWH[0] / 5,2) / 25,4).toFixed(4));
 
-            this.layouts['px']['custom'][1] = Number(usedWH[1]);
-            this.layouts['mm']['custom'][1] = Number(Number(usedWH[1] / 5,2).toFixed(4));
-            this.layouts['in']['custom'][1] = Number(Number(Number(usedWH[1] / 5,2) / 25,4).toFixed(4));
+            this.layoutsizes['px']['custom'][1] = Number(usedWH[1]);
+            this.layoutsizes['mm']['custom'][1] = Number(Number(usedWH[1] / 5,2).toFixed(4));
+            this.layoutsizes['in']['custom'][1] = Number(Number(Number(usedWH[1] / 5,2) / 25,4).toFixed(4));
         }
     }
 
-    // For now, force recto side
-    const recto = $template.children('CardSides').children('CardSide').first();
-    await this.sides['recto'].createCardStage(this.state.layout, this.state.orientation, getCardSideTemplate(recto), false);
+    // For now, force front side
+    const front = $template.children('CardSides').children('CardSide').first();
+    await this.sides.front.createCardStage(this.state.layout, getCardSideTemplate(front), false);
 
-    let verso;
+    let back;
     if ($template.children('HasVerso').text() === 'true') {
-        this.setState({ isRectoVerso: true });
-        verso = $template.children('CardSides').children('CardSide').last();
+        this.setState({ hasBack: true });
+        back = $template.children('CardSides').children('CardSide').last();
     }
-    await this.sides['verso'].createCardStage(this.state.layout, this.state.orientation, getCardSideTemplate(verso), false);
+    await this.sides.back.createCardStage(this.state.layout, getCardSideTemplate(back), false);
 }
 
 function getCardSideTemplate($xside) {
@@ -625,13 +627,6 @@ function getCardSideTemplate($xside) {
     return tpl;
 }
 
-async function reloadTemplate()
-{
-    const xmldoc = $.parseXML(toDPF.call(this));
-    const xmlContent = $(xmldoc);
-    await loadDPF.call(this, xmlContent);
-}
-
 export {
-    toDPF, loadDPF, reloadTemplate, xml_color, xml_escape
+    toDPF, loadDPF, xml_color, xml_escape
 }

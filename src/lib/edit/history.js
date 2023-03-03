@@ -3,10 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import $ from 'jquery';
-import {
-    toDPF, loadDPF
-} from './xml';
+import { getTemplate, loadTemplate } from './json';
 
 async function undoTemplate()
 {
@@ -31,9 +28,7 @@ async function redoTemplate()
 
 async function loadSnapshot(snapshot)
 {
-    var xmldoc = $.parseXML(snapshot.content);
-    let $xml = $(xmldoc);
-    await loadDPF.call(this, $xml);
+    await loadTemplate.call(this, snapshot.content);
 }
 
 function viewHistory()
@@ -53,14 +48,12 @@ function createSnapshot(preview)
 
     const snapshot = {
         name: this.state.name,
-        orientation: this.state.orientation,
-        layout: this.state.currentlayout,
-        isCard: (this.state.currentlayout === "cr80" || this.state.currentlayout === "custom"), // check should be improved
-        content: toDPF.call(this)
+        layout: this.state.layout,
+        content: getTemplate.call(this)
     };
 
     if (preview) {
-        const renderer = this.sides['recto'];
+        const renderer = this.sides.front;
         let oldgrid = false;
         //Disable Grid
         if (renderer.data.grid) {
@@ -74,18 +67,19 @@ function createSnapshot(preview)
             renderer.graphics.highlights.forEach((h) => {h.visible = false;});
         }
 
-        //Disable resize/rotate boxes
         if (renderer.graphics.card) {
+            //Disable resize/rotate boxes
             renderer.graphics.card.children.forEach(child => {
                 if (child.box)
                 {
                     child.box.visible = false;
                 }
             });
-        }
-        const resizedCanvas = renderer.createCanvasSnap();
-        if (resizedCanvas) {
-            snapshot.preview = resizedCanvas.toDataURL("image/png");
+
+            const resizedCanvas = renderer.createCanvas();
+            if (resizedCanvas) {
+                snapshot.preview = resizedCanvas.toDataURL("image/png");
+            }
         }
 
         //Enable Grid

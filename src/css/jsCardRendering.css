@@ -9,7 +9,7 @@
 	cursor : grab;
 }
 
-.draggableFieldAddRecto, .draggableFieldAddVerso {
+.draggableFieldAddFront, .draggableFieldAddBack {
 	cursor : pointer;
 	color : rgb(40, 167, 69)
 }

@@ -17,37 +17,38 @@ function editBackground()
 
 function newCard(layout)
 {
+    if (!layout.orientation) {
+        layout.orientation = (layout.size !== 'cr80' && layout.size !== "custom") ? 'portrait' : 'landscape';
+    }
     this.setState({
         name: '',
-        orientation: (layout !== 'cr80' && layout !== "custom") ? 'portrait' : 'landscape'
+        layout: layout
     });
 
     return Promise.all(this.getSides.call(this).map(async sideType => {
         const renderer = this.sides[sideType];
         if (renderer) {
-            await renderer.createCardStage(layout, this.state.orientation, undefined, false);
+            await renderer.createCardStage(layout, undefined, false);
         }
     }));
 }
 
 function editCustomSize(side)
 {
-    //1px = 5,2mm
-    //1in = 25,4mm
-
-    //Note : 'inch' value is not exact and sometime can differ from 0,1 to 0,2 
+    //1px = 0.2645833333 mm
+    //1in = 25.4mm
 
     if (side === 'x')
     {
-        this.layouts['px']['custom'][0] = Number($("#templateSizeX").val());
-        this.layouts['mm']['custom'][0] = Number(Number($("#templateSizeX").val() / 5,2).toFixed(4));
-        this.layouts['in']['custom'][0] = Number(Number(Number($("#templateSizeX").val() / 5,2) / 25,4).toFixed(4))
+        this.layoutsizes['px']['custom'][0] = Number($("#templateSizeX").val());
+        this.layoutsizes['mm']['custom'][0] = Number(Number($("#templateSizeX").val() * 0.2645833333).toFixed(4));
+        this.layoutsizes['in']['custom'][0] = Number(Number(Number($("#templateSizeX").val() * 0.2645833333) / 25,4).toFixed(4))
     }
     else
     {
-        this.layouts['px']['custom'][1] = Number($("#templateSizeY").val());
-        this.layouts['mm']['custom'][1] = Number(Number($("#templateSizeY").val() / 5,2).toFixed(4));
-        this.layouts['in']['custom'][1] = Number(Number(Number($("#templateSizeY").val() / 5,2) / 25,4).toFixed(4));
+        this.layoutsizes['px']['custom'][1] = Number($("#templateSizeY").val());
+        this.layoutsizes['mm']['custom'][1] = Number(Number($("#templateSizeY").val() * 0.2645833333).toFixed(4));
+        this.layoutsizes['in']['custom'][1] = Number(Number(Number($("#templateSizeY").val() * 0.2645833333) / 25,4).toFixed(4));
     }
 
     newCard.call(this, 'custom');

@@ -63,9 +63,9 @@
     "invalidFormatVersion": "La version de Format est invalide. Il est possible que le format de sortie ou que certaines fonctions ne soient pas compatibles avec votre version."
   },
   "properties": {
-    "recto_verso": "Recto / Verso",
-    "recto": "Recto",
-    "verso": "Verso",
+    "front_back": "Recto / Verso",
+    "front": "Recto",
+    "back": "Verso",
     "background_type": "Type de fond",
     "auto_request": "Demande automatique",
     "update": "Mettre à jour",

@@ -22,11 +22,14 @@ import {
     printCardConfirm, printCard, printTemplate, getAllNamedFields
 } from '../edit/print';
 import {
-    downloadDPF, downloadImage
+    downloadTemplate, downloadImage
 } from '../edit/download';
 import {
     toDPF, loadDPF
 } from '../edit/xml';
+import {
+    getTemplate, loadTemplate, toJson, fromJson
+} from '../edit/json';
 import CardSide from "./CardSide";
 import PrintCard from "./PrintCard";
 import History from "./History";
@@ -47,7 +50,7 @@ class CardDesigner extends React.Component {
         super(props);
         this.initProps();
 
-        this.downloadDPF = downloadDPF.bind(this);
+        this.downloadTemplate = downloadTemplate.bind(this);
         this.downloadImage = downloadImage.bind(this);
         this.printTemplate = printTemplate.bind(this);
         this.printCard = printCard.bind(this);
@@ -66,10 +69,14 @@ class CardDesigner extends React.Component {
         this.viewHistory = viewHistory.bind(this);
         this.toDPF = toDPF.bind(this);
         this.loadDPF = loadDPF.bind(this);
+        this.getTemplate = getTemplate.bind(this);
+        this.loadTemplate = loadTemplate.bind(this);
+        this.toJson = toJson.bind(this);
+        this.fromJson = fromJson.bind(this);
 
         this.sides = {
-            recto: undefined,
-            verso: undefined
+            front: undefined,
+            back: undefined
         };
            
         this.state = {
@@ -89,12 +96,14 @@ class CardDesigner extends React.Component {
             },
             alerts: [],
 
-            isRectoVerso: false,
+            hasBack: false,
             cardwidth: 0,
             cardheight: 0,
             cardborder: 3,
-            currentlayout: CardHelper.getLayouts(this.props.enabledCardSizes)[0].value,
-            orientation: 'landscape'
+            layout: {
+                size: CardHelper.getLayoutSizes(this.props.enabledCardSizes)[0].value,
+                orientation: 'landscape'
+            }
         }
     }
 
@@ -119,9 +128,9 @@ class CardDesigner extends React.Component {
     }
 
     getSides(all = false) {
-        const sides = [ 'recto' ];
-        if (all || this.state.isRectoVerso) {
-            sides.push('verso');
+        const sides = [ 'front' ];
+        if (all || this.state.hasBack) {
+            sides.push('back');
         }
         return sides;
     }
@@ -183,8 +192,8 @@ class CardDesigner extends React.Component {
         this.sides[sideType].features.fields.alignSelectedField(align);
     }
     
-    versoDisplayStyle() {
-        if (this.state.isRectoVerso)
+    backDisplayStyle() {
+        if (this.state.hasBack)
         {
             return "block";
         }
@@ -192,7 +201,7 @@ class CardDesigner extends React.Component {
     }
 
     showCustomSize() {
-        if (this.state.currentlayout === "custom")
+        if (this.state.layout.size === "custom")
             return (true);
         return (false);
     }
@@ -255,14 +264,16 @@ class CardDesigner extends React.Component {
             return;
 
         const reader = new FileReader();
-        reader.onload = (e) =>
-        {
-            const xmldoc = $.parseXML(e.target.result);
-            let $xml = $(xmldoc);
-            this.loadDPF($xml);
+        reader.onload = (e) => {
+            if (file.name && file.name.split('.').pop() === "dpf") {
+                const xmldoc = $.parseXML(e.target.result);
+                let $xml = $(xmldoc);
+                this.loadDPF($xml);
+            } else {
+                this.fromJson(e.target.result);
+            }
         };
-        reader.onerror = (e) =>
-        {
+        reader.onerror = (e) => {
             alert("Error reading file.");
         };
         reader.readAsText(file, "UTF-8");
@@ -274,25 +285,43 @@ class CardDesigner extends React.Component {
         })
     }
 
-    changeLayout(layout) {
-        this.setState({
-            currentlayout: layout
-        })
+    changeLayoutOrientation(orientation) {
+        this.changeLayout({
+            orientation: orientation
+        });
     }
 
-    changeIsRectoVerso(isRectoVerso) {
-        this.setState({ isRectoVerso: isRectoVerso });
+    changeLayoutSize(size) {
+        this.changeLayout({
+            size: size
+        });
+    }
+
+    changeLayout(layout) {
+        const newlayout = {
+            ...this.state.layout,
+            ...layout
+        };
+        this.setState({
+            layout: newlayout
+        });
+        this.updateRenderersLayout(newlayout);
+    }
+
+    changeHasBack(hasBack) {
+        this.setState({ hasBack: hasBack });
+        this.updateRenderersLayout();
+    }
+
+    updateRenderersLayout(layout = undefined) {
+        if (!layout) {
+            layout = this.state.layout;
+        }
         return Promise.all(this.getSides(true).map(async sideType => {
             const renderer = this.sides[sideType];
-            await renderer.createCardStage(this.state.currentlayout, this.state.orientation, undefined, false);
-        }));
-    }
-
-    changeOrientation(orientation) {
-        this.setState({orientation: orientation});
-        return Promise.all(this.getSides().map(async sideType => {
-            const renderer = this.sides[sideType];
-            await renderer.createCardStage(this.state.currentlayout, orientation, undefined, false);
+            if (renderer) {
+                await renderer.createCardStage(layout, undefined, false);
+            }
         }));
     }
 
@@ -350,17 +379,13 @@ class CardDesigner extends React.Component {
             });
         });
 
-        this.newCard(CardHelper.getLayouts(this.props.enabledCardSizes)[0].value).then(() => {
-            const content = this.props.content;
-            if (content !== undefined)
+        this.newCard({size: CardHelper.getLayoutSizes(this.props.enabledCardSizes)[0].value}).then(() => {
+            if (this.props.content !== undefined)
             {
                 setTimeout(() =>
                 {
-                    var xmldoc = $.parseXML(content);
-                    let $xml = $(xmldoc);
-        
                     //TODO Make all functions related async
-                    this.loadDPF($xml).then(() => {
+                    this.fromJson(this.props.content).then(() => {
                         setTimeout(() => {
                             this.saveCurrentSnapshot();
                         }, 2500);
@@ -375,14 +400,11 @@ class CardDesigner extends React.Component {
         
             //On Window Resize
             $(window).on('resize', (e) => {
-                let xmldoc = $.parseXML(this.toDPF());
-                let $xmlContent = $(xmldoc);
-                let $templatecopied = $xmlContent.find('Template');
-                this.getSides().forEach((sideType, index) => {
+                this.getSides().forEach((sideType) => {
                     const renderer = this.sides[sideType];
+                    const sidetpl = renderer.getTemplate();
                     if (renderer.graphics.stage) {
-                        renderer.createCardStage(this.state.currentlayout, this.state.orientation,
-                            $templatecopied.children('CardSides').children('CardSide').eq(index), true);
+                        renderer.createCardStage(this.state.layout, sidetpl, true);
                     }
                 });
             });
@@ -426,16 +448,16 @@ class CardDesigner extends React.Component {
             revert: true
         });
 
-        $("#carddesign_recto").droppable({
+        $("#carddesign_front").droppable({
             tolerance: "pointer",
             drop: function(event, ui){
-                dropEventFonction(event, ui, "recto");
+                dropEventFonction(event, ui, "front");
             }
         });
-        $("#carddesign_verso").droppable({
+        $("#carddesign_back").droppable({
             tolerance: "pointer",
             drop: function(event, ui){
-                dropEventFonction(event, ui, "verso");
+                dropEventFonction(event, ui, "back");
             }
         });
     }
@@ -474,7 +496,7 @@ class CardDesigner extends React.Component {
                         </OverlayTrigger>
                         <Form.Group className="col-md-6">
                             <Form.Label>{t('create.orientation')}</Form.Label>
-                            <Form.Control as="select" value={this.state.orientation} onChange={e => this.changeOrientation(e.target.value)}>
+                            <Form.Control as="select" value={this.state.layout.orientation} onChange={e => this.changeLayoutOrientation(e.target.value)}>
                                 <option value='landscape'>{t('create.orientation_landscape')}</option>
                                 <option value='portrait'>{t('create.orientation_portrait')}</option>
                             </Form.Control>
@@ -484,21 +506,18 @@ class CardDesigner extends React.Component {
                     <div className="row">
                         <Form.Group className="col-md-6">
                             <Form.Label>{t('common.ratio')}</Form.Label>
-                            <Form.Control as="select" className="form-control field_type_selector" value={this.state.currentlayout} onChange={e => this.changeLayout(e.target.value)}>
-                                {CardHelper.getLayouts(this.props.enabledCardSizes).map(layout => {
+                            <Form.Control as="select" className="form-control field_type_selector" value={this.state.layout.size} onChange={e => this.changeLayoutSize(e.target.value)}>
+                                {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(layout => {
                                     return(
                                         <option key={layout.value} value={layout.value}>
-                                            {layout.textv}
-                                            {layout.text &&
-                                                t(layout.text)
-                                            }
+                                            {layout.label}
                                         </option>
                                     )
                                 })}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group className="col-md-6">
-                            <Form.Check type="checkbox" checked={this.state.isRectoVerso} label={t('properties.recto_verso')} onChange={e => this.changeIsRectoVerso(e.target.checked)} />
+                            <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
                         </Form.Group>
                     </div>
             
@@ -507,15 +526,15 @@ class CardDesigner extends React.Component {
                             <Navbar.Collapse id="wdcbtns">
                                 <Nav className="me-auto">
                                     <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-file"]} /> {t('create.new')}</span>)}>
-                                        {CardHelper.getLayouts(this.props.enabledCardSizes).map(layout => {
+                                        {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(size => {
                                             return (
-                                                <NavDropdown.Item key={layout.value} href={'#new_' + layout.value} onClick={() => this.newCard(layout.value)}>{layout.textv}{t(layout.text)}</NavDropdown.Item>
+                                                <NavDropdown.Item key={size.value} href={'#new_' + size.value} onClick={() => this.newCard({size: size.value})}>{size.textv}{t(size.text)}</NavDropdown.Item>
                                             )
                                         })}
                                     </NavDropdown>
                                     <Nav.Link href="#load_file" onClick={() => $('#load_file').trigger('click')} id="load_file_link">
                                         <FontAwesomeIcon icon={["fas", "fa-cloud-upload-alt"]} /> {t('create.loadfile')}
-                                        <input type="file" id="load_file" accept=".dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
+                                        <input type="file" id="load_file" accept=".json,.dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
                                     </Nav.Link>
                                     {this.checkFormatVersion(this.props.formatVersion, "3.0.0.0", false) && this.showCustomSize() &&
                                         <Nav.Link href="#">
@@ -526,14 +545,14 @@ class CardDesigner extends React.Component {
                                     <NavDivider />
                                     {this.props.enableDownload &&
                                         <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "cloud-download-alt"]} /> {t('create.download')}</span>)}>
-                                            <NavDropdown.Item href="#download_dpf" onClick={this.downloadDPF}>{t('create.download_template')}</NavDropdown.Item>
-                                            <NavDropdown.Item href="#download_image" onClick={this.downloadImage}>{t('create.download_image')}</NavDropdown.Item>
+                                            <NavDropdown.Item href="#download_template" onClick={() => this.downloadTemplate()}>{t('create.download_template')}</NavDropdown.Item>
+                                            <NavDropdown.Item href="#download_image" onClick={() => this.downloadImage()}>{t('create.download_image')}</NavDropdown.Item>
                                         </NavDropdown>
                                     }
                                     {this.props.enablePrint &&
                                         <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-print"]} /> {t('create.print')}</span>)}>
-                                            <NavDropdown.Item href="#print_template" onClick={this.printTemplate}>{t('create.print_template')}</NavDropdown.Item>
-                                            <NavDropdown.Item href="#print_card" onClick={this.printCard}>{t('create.print_card')}</NavDropdown.Item>
+                                            <NavDropdown.Item href="#print_template" onClick={() => this.printTemplate()}>{t('create.print_template')}</NavDropdown.Item>
+                                            <NavDropdown.Item href="#print_card" onClick={() => this.printCard()}>{t('create.print_card')}</NavDropdown.Item>
                                         </NavDropdown>
                                     }
                                 </Nav>
@@ -541,10 +560,9 @@ class CardDesigner extends React.Component {
                         </Container>
                     </Navbar>
 
-                    {/* We should seperate rendering and designer components & logic, then create the stage at renderer side !!*/}
                     {this.getSides(true).map((sideType, sideIndex) => {
                         return (
-                            <div key={sideType} style={{display: (sideIndex === 0 || this.state.isRectoVerso) ? 'block' : 'none'}}>
+                            <div key={sideType} style={{display: (sideIndex === 0 || this.state.hasBack) ? 'block' : 'none'}}>
                                 <hr />
                                 <Navbar bg="light" expand="lg">
                                     <Container>
@@ -624,10 +642,10 @@ class CardDesigner extends React.Component {
                                                 <span></span>
                                             </th>
                                             <th scope="col">
-                                                {t('properties.recto')}
+                                                {t('properties.front')}
                                             </th>
-                                            <th scope="col" style={{display: this.state.isRectoVerso ? '' : 'none'}}>
-                                                {t('properties.verso')}
+                                            <th scope="col" style={{display: this.state.hasBack ? '' : 'none'}}>
+                                                {t('properties.back')}
                                             </th>
                                             <th scope="col">
                                                 {t('common.name')}
@@ -645,10 +663,10 @@ class CardDesigner extends React.Component {
                                                         <i className="fas fa-th"></i>
                                                     </td>
                                                     <td className="">
-                                                        <i className="fas fa-plus-square draggableFieldAddRecto" onClick={e => this.addDraggableField(e.target, 'recto')}></i>
+                                                        <i className="fas fa-plus-square draggableFieldAddFront" onClick={e => this.addDraggableField(e.target, 'front')}></i>
                                                     </td>
-                                                    <td className="" style={{display: this.state.isRectoVerso ? 'block' : 'none'}}>
-                                                        <i className="fas fa-plus-square draggableFieldAddVerso" onClick={e => this.addDraggableField(e.target, 'verso')}></i>
+                                                    <td className="" style={{display: this.state.hasBack ? 'block' : 'none'}}>
+                                                        <i className="fas fa-plus-square draggableFieldAddBack" onClick={e => this.addDraggableField(e.target, 'back')}></i>
                                                     </td>
                                                     <td className="">
                                                         {field.name}

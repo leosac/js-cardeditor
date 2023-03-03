@@ -3,36 +3,32 @@
  *
  * @license GNU LGPL version 3
  **/
-import {
-    toDPF
-} from './xml';
+import { toJson } from './json';
 
-function downloadDPF()
+function downloadTemplate()
 {
-    const xml = toDPF.call(this);
+    const json = toJson.call(this);
     let tplname = this.state.name;
-    if (tplname === '')
-    {
+    if (tplname === '') {
         tplname = 'Template';
     }
     const element = document.createElement('a');
-    const blob = new Blob([xml], {
-        type: 'text/xml'
+    const blob = new Blob([json], {
+        type: 'text/json'
     });
     element.href = URL.createObjectURL(blob);
-    element.setAttribute('download', tplname.toLowerCase() + '.dpf');
+    element.setAttribute('download', 'card-' + tplname.toLowerCase() + '.json');
     document.body.appendChild(element);
     element.click();
 }
 
 function downloadImage()
 {
-    const renderer = this.sides['recto'];
+    const renderer = this.sides.front;
     const resizedCanvas = renderer.createCanvas();
     let imgdata = resizedCanvas.toDataURL('image/png');
     let tplname = this.state.name;
-    if (tplname === '')
-    {
+    if (tplname === '') {
         tplname = 'Template';
     }
     const element = document.createElement('a');
@@ -43,5 +39,5 @@ function downloadImage()
 }
 
 export {
-    downloadDPF, downloadImage
+    downloadTemplate, downloadImage
 }
