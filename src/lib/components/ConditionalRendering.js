@@ -22,29 +22,42 @@ function ConditionalRendering({t, entries, show, onClose, onSubmit}) {
     }
 
     function addEntry() {
-        newEntries.push({
-            condition: '',
-            targetProperty: '',
-            propertyValue: ''
-        });
-        setEntries(newEntries);
+        setEntries([
+            ...newEntries,
+            {
+                condition: '',
+                targetProperty: '',
+                propertyValue: ''
+            }
+        ]);
     }
 
     function removeEntry(index) {
-        newEntries.splice(index, 1);
-        setEntries(newEntries);
+        setEntries(newEntries.filter((e, i) => i !== index));
+    }
+
+    function setEntryProperty(property, index, val) {
+        setEntries(newEntries.map((e, i) => {
+            if (i === index) {
+                const n = {...e};
+                n[property] = val;
+                return n;
+            } else {
+                return e;
+            }
+        }));
     }
 
     function setEntryCondition(index, val) {
-        newEntries[index].condition = val;
+        setEntryProperty('condition', index, val);
     }
 
     function setEntryTargetProperty(index, val) {
-        newEntries[index].targetProperty = val;
+        setEntryProperty('targetProperty', index, val);
     }
 
     function setEntryPropertyValue(index, val) {
-        newEntries[index].propertyValue = val;
+        setEntryProperty('propertyValue', index, val);
     }
 
     return (

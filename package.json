@@ -10,7 +10,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@leosac/cardrendering": "^1.4.1",
+    "@leosac/cardrendering": "^1.5.0",
     "@wojtekmaj/react-datetimerange-picker": "^4.2.0",
     "bootstrap": "^5.2.3",
     "bwip-js": "^3.2.2",

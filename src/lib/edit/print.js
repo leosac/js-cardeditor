@@ -68,19 +68,7 @@ function getAllNamedFields()
     let fields = [];
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
-        const cardRef = renderer.graphics.card;
-        for (let f = 0; f < cardRef.children.length; ++f)
-        {
-            const child = cardRef.getChildAt(f);
-            if (child.options !== undefined && child.options.name !== undefined && child.options.name !== '' && child.options.type !== undefined)
-            {
-                fields.push({
-                    name: child.options.name,
-                    type: child.options.type,
-                    value: child.options.value
-                });
-            }
-        }
+        fields.push(...renderer.features.fields.getAllNamedFields());
     });
     return fields;
 }
@@ -92,38 +80,16 @@ function printCard()
     })
 }
 
-async function printCardConfirm(values)
+async function printCardConfirm(data)
 {
     // Save copy of the current template
     const oldtpl = getTemplate.call(this);
-
     // Update values from form. For each side if need be.
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
-        const cardRef = renderer.graphics.card;
-        let fields = [];
-        for (let f = 0; f < cardRef.children.length; ++f)
-        {
-            const child = cardRef.getChildAt(f);
-            if (child.options !== undefined && child.options.name !== undefined && child.options.name !== '' && child.options.type !== undefined)
-            {
-                if (values[child.options.name] !== undefined) {
-                    child.options.value = values[child.options.name];
-                    fields.push(child);
-                }
-            }
-        }
-        for (let f = 0; f < fields.length; ++f)
-        {
-            cardRef.removeChild(fields[f]);
-            renderer.features.fields.createField(
-                fields[f].options,
-                {x: fields[f].options.x, y: fields[f].options.y}
-            );
-        }
+        renderer.setCardData(data);
     });
     await printTemplate.call(this);
-
     // Restore template
     await loadTemplate.call(this, oldtpl);
 }
