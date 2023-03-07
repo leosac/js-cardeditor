@@ -1,5 +1,6 @@
 function getTemplate() {
     const tpl = {
+        name: this.state.name,
         layout: this.state.layout,
         sides: {}
     };
@@ -22,6 +23,7 @@ function loadTemplate(tpl) {
     }
 
     this.setState({
+        name: tpl.name,
         layout: tpl.layout,
         hasBack: (tpl.sides.back !== undefined)
     });
