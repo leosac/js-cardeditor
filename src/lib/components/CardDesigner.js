@@ -41,6 +41,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import NavDivider from "./NavDivider"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -191,14 +193,6 @@ class CardDesigner extends React.Component {
     alignSelectedField(align, sideType) {
         this.sides[sideType].features.fields.alignSelectedField(align);
     }
-    
-    backDisplayStyle() {
-        if (this.state.hasBack)
-        {
-            return "block";
-        }
-        return "none";
-    }
 
     showCustomSize() {
         if (this.state.layout.size === "custom")
@@ -238,12 +232,14 @@ class CardDesigner extends React.Component {
             fontSize: '12pt',
             fontStyle: 'Normal',
             align: 'TopLeft',
-            borderWidth: 0,
-            borderColor: 0x000000,
             scaleFont: false,
             autoSize: true,
             wordBreak: false,
             maxLength: 0,
+            border: {
+                width: 0,
+                color: 0x000000,
+            },
             width: 46,
             height: 18,
             x: $("#carddesign_" + sideType).width() / 2,
@@ -560,66 +556,66 @@ class CardDesigner extends React.Component {
                         </Container>
                     </Navbar>
 
-                    {this.getSides(true).map((sideType, sideIndex) => {
-                        return (
-                            <div key={sideType} style={{display: (sideIndex === 0 || this.state.hasBack) ? 'block' : 'none'}}>
-                                <hr />
-                                <Navbar bg="light" expand="lg">
-                                    <Container>
-                                        <Navbar.Collapse id={sideType + '_wdcbtns'}>
-                                            <Nav className="me-auto">
-                                                <Nav.Link id={sideType + '_factory_cursor'} href="#cursor" onClick={() => this.changeFactory('cursor', sideType)}>
-                                                    <FontAwesomeIcon icon={["fas", "fa-mouse-pointer"]} /> {t('create.cursor')}
-                                                </Nav.Link>
-                                                <Nav.Link id={sideType + '_factory_label'} href="#label" onClick={() => this.changeFactory('label', sideType)}>
-                                                    <FontAwesomeIcon icon={["fas", "fa-font"]} /> {t('create.label')}
-                                                </Nav.Link>
-                                                <Nav.Link id={sideType + '_factory_rectangle'} href="#rectangle" onClick={() => this.changeFactory('rectangle', sideType)}>
-                                                    <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle'}}></div> {t('create.rectangle')}
-                                                </Nav.Link>
-                                                <Nav.Link id={sideType + '_factory_circle'} href="#circle" onClick={() => this.changeFactory('circle', sideType)}>
-                                                    <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle', WebkitBorderRadius: '100px', MozBorderRadius: '0.5em', OBorderRadius: '0.5em', borderRadius: '0.5em'}}></div> {t('create.circle')}
-                                                </Nav.Link>
-                                                <Nav.Link id={sideType + '_factory_picture'} href="#picture" onClick={() => this.changeFactory('picture', sideType)}>
-                                                    <FontAwesomeIcon icon={["fas", "fa-images"]} /> {t('create.picture')}
-                                                </Nav.Link>
-                        
-                                                <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('common.codes')}</span>)}>
-                                                    <NavDropdown.Item id={sideType + '_factory_barcode'} href="#barcode" onClick={() => this.changeFactory('barcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.barcode')}</NavDropdown.Item>
-                                                    <NavDropdown.Item id={sideType + '_factory_qrcode'} href="#qrcode" onClick={() => this.changeFactory('qrcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.qrcode')}</NavDropdown.Item>
-                                                    <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('datamatrix', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
-                                                    <NavDropdown.Item id={sideType + '_factory_pdf417'} href="#pdf417" onClick={() => this.changeFactory('pdf417', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.pdf417')}</NavDropdown.Item>
-                                                </NavDropdown>
-                        
-                                                {this.props.enableUnprintable &&
-                                                    <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-plus-circle"]} /> {t('common.unprintable')}</span>)}>
-                                                        <NavDropdown.Item id={sideType + '_factory_fingerprint'} href="#fingerprint" onClick={() => this.changeFactory('fingerprint', sideType)}><FontAwesomeIcon icon={["fas", "fa-thumbs-up"]} /> {t('create.fingerprint')}</NavDropdown.Item>
-                                                        <NavDropdown.Item id={sideType + '_factory_urllink'} href="#urllink" onClick={() => this.changeFactory('urllink', sideType)}><FontAwesomeIcon icon={["fas", "fa-globe-europe"]} /> {t('create.urllink')}</NavDropdown.Item>
+                    <Tabs defaultActiveKey="front">
+                        {this.getSides(true).map((sideType, sideIndex) => {
+                            return (
+                                <Tab key={sideType} eventKey={sideType} title={t('properties.' + sideType)} disabled={(sideIndex > 0 && !this.state.hasBack)}>
+                                    <Navbar bg="light" expand="lg">
+                                        <Container>
+                                            <Navbar.Collapse id={sideType + '_wdcbtns'}>
+                                                <Nav className="me-auto">
+                                                    <Nav.Link id={sideType + '_factory_cursor'} href="#cursor" onClick={() => this.changeFactory('cursor', sideType)}>
+                                                        <FontAwesomeIcon icon={["fas", "fa-mouse-pointer"]} /> {t('create.cursor')}
+                                                    </Nav.Link>
+                                                    <Nav.Link id={sideType + '_factory_label'} href="#label" onClick={() => this.changeFactory('label', sideType)}>
+                                                        <FontAwesomeIcon icon={["fas", "fa-font"]} /> {t('create.label')}
+                                                    </Nav.Link>
+                                                    <Nav.Link id={sideType + '_factory_rectangle'} href="#rectangle" onClick={() => this.changeFactory('rectangle', sideType)}>
+                                                        <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle'}}></div> {t('create.rectangle')}
+                                                    </Nav.Link>
+                                                    <Nav.Link id={sideType + '_factory_circle'} href="#circle" onClick={() => this.changeFactory('circle', sideType)}>
+                                                        <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle', WebkitBorderRadius: '100px', MozBorderRadius: '0.5em', OBorderRadius: '0.5em', borderRadius: '0.5em'}}></div> {t('create.circle')}
+                                                    </Nav.Link>
+                                                    <Nav.Link id={sideType + '_factory_picture'} href="#picture" onClick={() => this.changeFactory('picture', sideType)}>
+                                                        <FontAwesomeIcon icon={["fas", "fa-images"]} /> {t('create.picture')}
+                                                    </Nav.Link>
+                            
+                                                    <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('common.codes')}</span>)}>
+                                                        <NavDropdown.Item id={sideType + '_factory_barcode'} href="#barcode" onClick={() => this.changeFactory('barcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.barcode')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_qrcode'} href="#qrcode" onClick={() => this.changeFactory('qrcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.qrcode')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('datamatrix', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_pdf417'} href="#pdf417" onClick={() => this.changeFactory('pdf417', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.pdf417')}</NavDropdown.Item>
                                                     </NavDropdown>
-                                                }
+                            
+                                                    {this.props.enableUnprintable &&
+                                                        <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-plus-circle"]} /> {t('common.unprintable')}</span>)}>
+                                                            <NavDropdown.Item id={sideType + '_factory_fingerprint'} href="#fingerprint" onClick={() => this.changeFactory('fingerprint', sideType)}><FontAwesomeIcon icon={["fas", "fa-thumbs-up"]} /> {t('create.fingerprint')}</NavDropdown.Item>
+                                                        </NavDropdown>
+                                                    }
 
-                                                <NavDropdown title={t('create.align')}>
-                                                    <NavDropdown.Item href="#align_left" onClick={() => this.alignSelectedField('left', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-left"]} /> {t('create.align_left')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_right" onClick={() => this.alignSelectedField('right', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-right"]} /> {t('create.align_right')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_top" onClick={() => this.alignSelectedField('top', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-up"]} /> {t('create.align_top')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_bottom" onClick={() => this.alignSelectedField('bottom', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-down"]} /> {t('create.align_bottom')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_vertical" onClick={() => this.alignSelectedField('vertical', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines-vertical"]} /> {t('create.align_vertical')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#align_horizontal" onClick={() => this.alignSelectedField('horizontal', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines"]} /> {t('create.align_horizontal')}</NavDropdown.Item>
-                                                    <NavDropdown.Item href="#grid" onClick={() => this.toggleGrid(sideType)}><FontAwesomeIcon icon={["fas", "fa-border-all"]} /> {t('create.grid')}</NavDropdown.Item>
-                                                </NavDropdown>
-                                            </Nav>
-                                        </Navbar.Collapse>
-                                    </Container>
-                                </Navbar>
-                    
-                                <div className="row">
-                                    <div className="col-md-12 text-center">
-                                        <CardSide sideType={sideType} editor={this} fieldlist={this.props.fieldlist} />
+                                                    <NavDropdown title={t('create.align')}>
+                                                        <NavDropdown.Item href="#align_left" onClick={() => this.alignSelectedField('left', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-left"]} /> {t('create.align_left')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#align_right" onClick={() => this.alignSelectedField('right', sideType)}><FontAwesomeIcon icon={["fas", "fa-align-right"]} /> {t('create.align_right')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#align_top" onClick={() => this.alignSelectedField('top', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-up"]} /> {t('create.align_top')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#align_bottom" onClick={() => this.alignSelectedField('bottom', sideType)}><FontAwesomeIcon icon={["fas", "fa-arrow-down"]} /> {t('create.align_bottom')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#align_vertical" onClick={() => this.alignSelectedField('vertical', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines-vertical"]} /> {t('create.align_vertical')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#align_horizontal" onClick={() => this.alignSelectedField('horizontal', sideType)}><FontAwesomeIcon icon={["fas", "fa-grip-lines"]} /> {t('create.align_horizontal')}</NavDropdown.Item>
+                                                        <NavDropdown.Item href="#grid" onClick={() => this.toggleGrid(sideType)}><FontAwesomeIcon icon={["fas", "fa-border-all"]} /> {t('create.grid')}</NavDropdown.Item>
+                                                    </NavDropdown>
+                                                </Nav>
+                                            </Navbar.Collapse>
+                                        </Container>
+                                    </Navbar>
+                        
+                                    <div className="row">
+                                        <div className="col-md-12 text-center">
+                                            <CardSide sideType={sideType} editor={this} fieldlist={this.props.fieldlist} />
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        )
-                    })}
+                                </Tab>
+                            )
+                        })}
+                    </Tabs>
                     
                     {this.props.onSubmit &&
                         <div className="text-right edit-create-button-template">

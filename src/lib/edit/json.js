@@ -28,7 +28,7 @@ function loadTemplate(tpl) {
         hasBack: (tpl.sides.back !== undefined)
     });
     this.sides.front.createCardStage(tpl.layout, tpl.sides.front, false);
-    if (tpl.sides.back) {
+    if (this.sides.back) {
         this.sides.back.createCardStage(tpl.layout, tpl.sides.back, false);
     }
 }

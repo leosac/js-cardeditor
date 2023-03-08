@@ -20,7 +20,7 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
     const [align, setAlign] = useState(field.align);
     const [maxLength, setMaxLength] = useState(field.maxLength);
     const [autoSize, setAutoSize] = useState(field.autoSize);
-    const [autoFontScale, setAutoFontScale] = useState(field.autoFontScale);
+    const [scaleFont, setScaleFont] = useState(field.scaleFont);
     const [wordBreak, setWordBreak] = useState(field.wordBreak);
 
     function modalSubmit() {
@@ -35,7 +35,7 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
                 align: align,
                 maxLength: maxLength,
                 autoSize: autoSize,
-                autoFontScale: autoFontScale,
+                scaleFont: scaleFont,
                 wordBreak: wordBreak
             });
         }
@@ -100,7 +100,7 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <Form.Group>
                 <Form.Check type="checkbox" label= {t('properties.autosize')} checked={autoSize} onChange={e => setAutoSize(e.target.checked)} />
-                <Form.Check type="checkbox" label= {t('properties.autofontscale')} checked={autoFontScale} onChange={e => setAutoFontScale(e.target.checked)} />
+                <Form.Check type="checkbox" label= {t('properties.scaleFont')} checked={scaleFont} onChange={e => setScaleFont(e.target.checked)} />
                 <Form.Check type="checkbox" label= {t('properties.wordbreak')} checked={wordBreak} onChange={e => setWordBreak(e.target.checked)} />
             </Form.Group>
         </DesignerModal>

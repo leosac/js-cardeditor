@@ -45,10 +45,13 @@ function parseConditionalRenderingEntries($xml)
 function getBorderWidth(field)
 {
     if (field.children('BorderSize')) {
-        //Since 4.0.0.0
+        // Since 4.0.0.0
         return (Number(field.children('BorderSize').text()));
+    } else if (field.children('BorderWidth')) {
+        // Alternative
+        return (Number(field.children('BorderWidth').text()));
     } else if (field.children('HasBorder')) {
-        //Pre 4.0.0.0
+        // Pre 4.0.0.0
         if (field.children('HasBorder').text() === "true")
             return (1);
         else
@@ -421,7 +424,7 @@ function getCardSideTemplate($xside) {
                     fontStyle = fontext[1].trim();
                 }
             }
-            if (ftype === 'DataPrinter.Core.Objects.TextField') {
+            if (ftype === 'DataPrinter.Core.Objects.TextField' || ftype === 'DataPrinter.Core.Objects.URLLinkField') {
                 const colorFill = $this.children('ColorFill').text();
                 field = {
                     type: 'label',
@@ -433,37 +436,15 @@ function getCardSideTemplate($xside) {
                     fontSize: font[1].trim(),
                     fontStyle: fontStyle,
                     colorFill: (colorFill !== '' && colorFill !== '16777215') ? decimalToHexColor($this.children('ColorFill').text()) : -1,
-                    borderWidth: getBorderWidth($this),
-                    borderColor: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000,
-                    scaleFont: ($this.children('AutoFontResize').text() === 'true'),
+                    border: {
+                        width: getBorderWidth($this),
+                        color: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000
+                    },
+                    scaleFont: ($this.children('AutoFontResize').text() === 'true') ? 'exceed' : false,
                     autoSize: ($this.children('AutoResize').text() === 'true'),
                     align: $this.children('Align').text(),
                     wordBreak: ($this.children('WordBreak').text() === 'true'),
                     maxLength: Number(($this.children('MaxLength')).text()),
-                    width: Number($this.children('Width').text()),
-                    height: Number($this.children('Height').text()),
-                    x: Number($this.children('XPosition').text()),
-                    y: Number($this.children('YPosition').text()),
-                    zIndex: Number($this.children('ZIndex').text()),
-                    rotation: Number($this.children('RotationAngle').text()),
-                    conditionalRenderingEntries: parseConditionalRenderingEntries($this.children('ConditionalRenderingEntries')),
-                };
-            } else if (ftype === 'DataPrinter.Core.Objects.URLLinkField') {
-                const colorFill = $this.children('ColorFill').text();
-                field = {
-                    type: 'urllink',
-                    name: $this.children('Name').text(),
-                    useMacros: ($this.children('UseMacros').text() === 'true'),
-                    value: $this.children('Value').text(),
-                    color: decimalToHexColor($this.children('Color').text()),
-                    fontFamily: font[0].trim(),
-                    fontSize: font[1].trim(),
-                    fontStyle: fontStyle,
-                    colorFill: (colorFill !== '' && colorFill !== '16777215') ? decimalToHexColor($this.children('ColorFill').text()) : -1,
-                    borderWidth: getBorderWidth($this),
-                    borderColor: 0x000000,
-                    scaleFont: ($this.children('AutoFontResize').text() === 'true'),
-                    autoSize: ($this.children('AutoResize').text() === 'true'),
                     width: Number($this.children('Width').text()),
                     height: Number($this.children('Height').text()),
                     x: Number($this.children('XPosition').text()),
@@ -575,8 +556,10 @@ function getCardSideTemplate($xside) {
                     value: data,
                     width: Number($this.children('Width').text()),
                     height: Number($this.children('Height').text()),
-                    borderWidth: getBorderWidth($this),
-                    borderColor: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000,
+                    border: {
+                        width: getBorderWidth($this),
+                        color: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000
+                    },
                     x: Number($this.children('XPosition').text()),
                     y: Number($this.children('YPosition').text()),
                     zIndex: Number($this.children('ZIndex').text()),
@@ -589,8 +572,10 @@ function getCardSideTemplate($xside) {
                     name: $this.children('Name').text(),
                     useMacros: ($this.children('UseMacros').text() === 'true'),
                     color: decimalToHexColor($this.children('Color').text()),
-                    borderWidth: Number($this.children('BorderWidth').text()),
-                    borderColor: decimalToHexColor($this.children('BorderColor').text()),
+                    border: {
+                        width: getBorderWidth($this),
+                        color: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000
+                    },
                     width: Number($this.children('Width').text()),
                     height: Number($this.children('Height').text()),
                     x: Number($this.children('XPosition').text()),
@@ -605,8 +590,10 @@ function getCardSideTemplate($xside) {
                     name: $this.children('Name').text(),
                     useMacros: ($this.children('UseMacros').text() === 'true'),
                     color: decimalToHexColor($this.children('Color').text()),
-                    borderWidth: Number($this.children('BorderWidth').text()),
-                    borderColor: decimalToHexColor($this.children('BorderColor').text()),
+                    border: {
+                        width: getBorderWidth($this),
+                        color: $this.children('ColorBorder') ? $this.children('ColorBorder').text() : 0x000000
+                    },
                     width: Number($this.children('Width').text()),
                     height: Number($this.children('Height').text()),
                     x: Number($this.children('XPosition').text()),

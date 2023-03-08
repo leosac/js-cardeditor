@@ -3,6 +3,7 @@ JS-CardEditor is a React component used to create/edit card printing templates.
 It works with node.js and web browsers (once packaged with webpack).
 
 ![CardEditor Demo](https://github.com/leosac/js-cardeditor/blob/master/public/demo-cardeditor.gif?raw=true)
+[Run demo from here](https://print.leosac.com)
 
 Related projects:
  * [js-cardrendering](https://github.com/leosac/js-cardrendering): the card rendering engine used by this project
