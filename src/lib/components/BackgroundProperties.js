@@ -38,24 +38,25 @@ function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) 
                     <option value="picture">{t('properties.picture')}</option>
                 </Form.Control>
             </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.color')}</Form.Label>
+            <br />
+            <Form.Group className={type !== 'color' ? 'd-none' : ''}>
                 <ColorPicker color={color} onChange={color => setColor(color)} />
             </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.picture')}</Form.Label>
-                <ImageEditor image={picture} onChange={img => setPicture(img)} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>{t('properties.prop_background_style')}</Form.Label>
-                <Form.Control as="select" value={layout} onChange={e => setLayout(e.target.value)}>
-                    <option value="0">{t('properties.prop_background_style_none')}</option>
-                    {/*<option value="1">{t('properties.prop_background_style_tile')}</option> */}
-                    <option value="2">{t('properties.prop_background_style_center')}</option>
-                    <option value="3">{t('properties.prop_background_style_stretch')}</option>
-                    <option value="4">{t('properties.prop_background_style_zoom')}</option>
-                </Form.Control>
-            </Form.Group>
+            <div className={type !== 'picture' ? 'd-none' : ''}>
+                <Form.Group>
+                    <ImageEditor image={picture} onChange={img => setPicture(img)} />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>{t('properties.prop_background_style')}</Form.Label>
+                    <Form.Control as="select" value={layout} onChange={e => setLayout(e.target.value)}>
+                        <option value="0">{t('properties.prop_background_style_none')}</option>
+                        {/*<option value="1">{t('properties.prop_background_style_tile')}</option> */}
+                        <option value="2">{t('properties.prop_background_style_center')}</option>
+                        <option value="3">{t('properties.prop_background_style_stretch')}</option>
+                        <option value="4">{t('properties.prop_background_style_zoom')}</option>
+                    </Form.Control>
+                </Form.Group>
+            </div>
         </DesignerModal>
     );
 }
