@@ -1,11 +1,14 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/lib/index.js',
+  entry: './src/lib/dom.js',
   output: {
     filename: 'cardeditor.js',
     library: 'cardeditor',
     path: path.resolve(__dirname, 'dist'),
+  },
+  optimization: {
+    minimize: false
   },
   module: {
     rules: [
@@ -33,7 +36,7 @@ module.exports = {
     ],
   },
   externals: {
-    'react': 'react',
-    'react-dom': 'react-dom',
+    'react': 'React',
+    'react-dom': 'ReactDOM'  
   }
 };

@@ -7,7 +7,6 @@ import $ from "jquery";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { CardHelper } from "@leosac/cardrendering";
-import FormValidator from "../form";
 import {
     newCard, editCustomSize
 } from '../edit/card';
@@ -163,15 +162,6 @@ class CardDesigner extends React.Component {
         } else {
             return 0;
         }
-    }
-
-    errorState(fieldName){
-        const e = new FormValidator('cardDesigner').getErrorFor(fieldName);
-        return e ? 'has-error' : '';
-    }
-    
-    errorMessage(fieldName) {
-        return new FormValidator('cardDesigner').getErrorFor(fieldName);
     }
 
     showAlert(type, title, text) {
