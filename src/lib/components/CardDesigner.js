@@ -126,6 +126,14 @@ class CardDesigner extends React.Component {
         if (!this.props.formatVersion) {
             this.props.formatVersion = "3.0.0.0";
         }
+
+        if (this.props.enableName === undefined) {
+            this.props.enableName = true;
+        }
+
+        if (this.props.enableLoad === undefined) {
+            this.props.enableLoad = true;
+        }
     }
 
     getSides(all = false) {
@@ -473,13 +481,18 @@ class CardDesigner extends React.Component {
                             )
                         })}
                     </div>
-                    <div className="row ">
-                        <OverlayTrigger placement="right" overlay={<Tooltip>{t('create.name_help')}</Tooltip>}>
-                            <Form.Group className="col-md-6">
-                                <Form.Label>{t('create.name')}</Form.Label>
-                                <Form.Control type="text" placeholder={t('create.name_default')} value={this.state.name} onChange={e => this.changeName(e.target.value)} />
-                            </Form.Group>
-                        </OverlayTrigger>
+                    {this.props.enableName &&
+                        <div className="row ">
+                            <OverlayTrigger placement="right" overlay={<Tooltip>{t('create.name_help')}</Tooltip>}>
+                                <Form.Group className="col-md-6">
+                                    <Form.Label>{t('create.name')}</Form.Label>
+                                    <Form.Control type="text" placeholder={t('create.name_default')} value={this.state.name} onChange={e => this.changeName(e.target.value)} />
+                                </Form.Group>
+                            </OverlayTrigger>
+                        </div>
+                    }
+            
+                    <div className="row">
                         <Form.Group className="col-md-6">
                             <Form.Label>{t('create.orientation')}</Form.Label>
                             <Form.Control as="select" value={this.state.layout.orientation} onChange={e => this.changeLayoutOrientation(e.target.value)}>
@@ -487,8 +500,11 @@ class CardDesigner extends React.Component {
                                 <option value='portrait'>{t('create.orientation_portrait')}</option>
                             </Form.Control>
                         </Form.Group>
+                        <Form.Group className="col-md-6">
+                            <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
+                        </Form.Group>
                     </div>
-            
+
                     <div className="row">
                         <Form.Group className="col-md-6">
                             <Form.Label>{t('common.ratio')}</Form.Label>
@@ -502,26 +518,27 @@ class CardDesigner extends React.Component {
                                 })}
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group className="col-md-6">
-                            <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
-                        </Form.Group>
                     </div>
             
                     <Navbar bg="light" expand="lg">
                         <Container>
                             <Navbar.Collapse id="wdcbtns">
                                 <Nav className="me-auto">
-                                    <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-file"]} /> {t('create.new')}</span>)}>
-                                        {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(size => {
-                                            return (
-                                                <NavDropdown.Item key={size.value} href={'#new_' + size.value} onClick={() => this.newCard({size: size.value})}>{size.textv}{t(size.text)}</NavDropdown.Item>
-                                            )
-                                        })}
-                                    </NavDropdown>
-                                    <Nav.Link href="#load_file" onClick={() => $('#load_file').trigger('click')} id="load_file_link">
-                                        <FontAwesomeIcon icon={["fas", "fa-cloud-upload-alt"]} /> {t('create.loadfile')}
-                                        <input type="file" id="load_file" accept=".json,.dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
-                                    </Nav.Link>
+                                    {this.props.enableLoad &&
+                                        <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-file"]} /> {t('create.new')}</span>)}>
+                                            {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(size => {
+                                                return (
+                                                    <NavDropdown.Item key={size.value} href={'#new_' + size.value} onClick={() => this.newCard({size: size.value})}>{size.textv}{t(size.text)}</NavDropdown.Item>
+                                                )
+                                            })}
+                                        </NavDropdown>
+                                    }
+                                    {this.props.enableLoad &&
+                                        <Nav.Link href="#load_file" onClick={() => $('#load_file').trigger('click')} id="load_file_link">
+                                            <FontAwesomeIcon icon={["fas", "fa-cloud-upload-alt"]} /> {t('create.loadfile')}
+                                            <input type="file" id="load_file" accept=".json,.dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
+                                        </Nav.Link>
+                                    }
                                     {this.checkFormatVersion(this.props.formatVersion, "3.0.0.0", false) && this.showCustomSize() &&
                                         <Nav.Link href="#">
                                             {t('properties.width')} <input id="templateSizeX" type="number" min="0" max="500" maxLength="4" value={this.getCustomSize('x')} onChange={e => this.editCustomSize('x', Number(e.target.value))} />
