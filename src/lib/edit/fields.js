@@ -46,6 +46,22 @@ function editField()
     }
 }
 
+function integerFieldProperty(v) {
+    if (v === undefined) {
+        return undefined;
+    }
+
+    return parseInt(v);
+}
+
+function floatFieldProperty(v) {
+    if (v === undefined) {
+        return undefined;
+    }
+
+    return parseFloat(v);
+}
+
 function addFieldFromList(ev, canvas)
 {
     const pos = this.renderer.features.fields.getMousePos(canvas.current, ev);
@@ -83,5 +99,5 @@ async function addFieldFromListConfirm(f)
 }
 
 export {
-    editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm
+    editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm, integerFieldProperty, floatFieldProperty
 }

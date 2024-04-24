@@ -8,6 +8,7 @@ import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 import ColorPicker from "./ColorPicker";
+import { integerFieldProperty } from "../edit/fields";
 
 function FieldBorderProperties({t, border, show, editor, onClose, onSubmit}) {
     const [width, setWidth] = useState(border.width ?? 0);
@@ -29,7 +30,7 @@ function FieldBorderProperties({t, border, show, editor, onClose, onSubmit}) {
         <DesignerModal id="fieldborder_properties" show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_border')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.borderwidth')}</Form.Label>
-                <Form.Control type="number" placeholder="1" min="0" max="100" value={width} onChange={e => setWidth(Number(e.target.value))} />
+                <Form.Control type="number" placeholder="1" min="0" max="100" value={width} onChange={e => setWidth(integerFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.bordercolor')}</Form.Label>

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "./DesignerModal";
+import { integerFieldProperty } from "../edit/fields";
 
 function GridSettings({t, grid, show, editor, onClose, onSubmit}) {
     const [unit, setUnit] = useState(grid.unit);
@@ -46,11 +47,11 @@ function GridSettings({t, grid, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.grid_step')}</Form.Label>
-                <Form.Control type="number" placeholder="6" value={step} onChange={e => setStep(e.target.value)} />
+                <Form.Control type="number" placeholder="6" value={step} onChange={e => setStep(integerFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.grid_zoom')} (%)</Form.Label>
-                <Form.Control type="number" placeholder="100" value={zoom} onChange={e => setZoom(e.target.value)} />
+                <Form.Control type="number" placeholder="100" value={zoom} onChange={e => setZoom(integerFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Check type="checkbox" label={t('properties.grid_ruler')} checked={ruler} onChange={e => setRuler(e.target.checked)} />
@@ -60,11 +61,11 @@ function GridSettings({t, grid, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.grid_columns')}</Form.Label>
-                <Form.Control type="number" placeholder="8" value={columns} onChange={e => setColumns(e.target.value)} />
+                <Form.Control type="number" placeholder="8" value={columns} onChange={e => setColumns(integerFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.grid_rows')}</Form.Label>
-                <Form.Control type="number" placeholder="6" value={rows} onChange={e => setRows(e.target.value)} />
+                <Form.Control type="number" placeholder="6" value={rows} onChange={e => setRows(integerFieldProperty(e.target.value))} />
             </Form.Group>
         </DesignerModal>
     );

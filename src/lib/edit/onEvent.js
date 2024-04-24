@@ -200,6 +200,7 @@ function onCardKeyUp(event, renderer) {
                 renderer.features.fields.deleteField();
             }
             if (renderer.data.fields.selected.length > 0) {
+                event.preventDefault();
                 // Left arrow
                 if (event.keyCode === 37) {
                     renderer.features.fields.moveSelectedFields(-renderer.data.grid.step, 0);
@@ -225,7 +226,7 @@ function onCardKeyUp(event, renderer) {
 
 function onDragStart(event, cardside, renderer, field) {
     const factorytype = renderer.data.fields.factorytype ?? 'cursor';
-
+console.log("onDragStart");
     $(':focus').blur();
     if (factorytype === 'cursor') {
         if (renderer.data.clicks !== 1) {

@@ -9,6 +9,7 @@ import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 import ColorPicker from './ColorPicker';
 import ImageEditor from "./ImageEditor";
+import { integerFieldProperty } from "../edit/fields";
 
 function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) {
     const [type, setType] = useState(background.picture_layout ? 'picture' : 'color');
@@ -48,7 +49,7 @@ function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) 
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>{t('properties.prop_background_style')}</Form.Label>
-                    <Form.Control as="select" value={layout} onChange={e => setLayout(e.target.value)}>
+                    <Form.Control as="select" value={layout} onChange={e => setLayout(integerFieldProperty(e.target.value))}>
                         <option value="0">{t('properties.prop_background_style_none')}</option>
                         {/*<option value="1">{t('properties.prop_background_style_tile')}</option> */}
                         <option value="2">{t('properties.prop_background_style_center')}</option>

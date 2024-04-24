@@ -99,8 +99,8 @@ class CardSide extends React.Component {
         cardside.props.editor.showAlert.call(cardside.props.editor, "danger", cardside.props.t('alerts.error'), cardside.props.t('alerts.' + errorCode));
     }
 
-    updateSelectedField(options) {
-        this.renderer.features.fields.updateField(options);
+    updateSelectedField(options, createOpt = {}) {
+        this.renderer.features.fields.updateField(options, createOpt);
     }
 
     updateBackground(background) {
@@ -135,7 +135,7 @@ class CardSide extends React.Component {
                         }
                         <ConditionalRendering show={this.state.show_conditionalrendering} editor={editor} entries={this.state.selectedfield.conditionalRenderingEntries} onClose={() => this.setState({show_conditionalrendering: false})} onSubmit={entries => this.updateSelectedField({conditionalRenderingEntries: entries})} />
                         <LabelProperties show={this.state.show_field_label} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_label: false})} onSubmit={(options) => this.updateSelectedField(options)} />
-                        <PictureProperties show={this.state.show_field_picture} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_picture: false})} onSubmit={(options) => this.updateSelectedField(options)} />
+                        <PictureProperties show={this.state.show_field_picture} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_picture: false})} onSubmit={(options) => this.updateSelectedField(options, { autoSizeImg: true })} />
                         <BarcodeProperties show={this.state.show_field_barcode} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_barcode: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <QrCodeProperties show={this.state.show_field_qrcode} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_qrcode: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <Pdf417Properties show={this.state.show_field_pdf417} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_pdf417: false})} onSubmit={(options) => this.updateSelectedField(options)} />

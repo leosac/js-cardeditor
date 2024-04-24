@@ -48,8 +48,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class CardDesigner extends React.Component {
 
     constructor(props) {
+        CardDesigner.initProps(props);
         super(props);
-        this.initProps();
 
         this.downloadTemplate = downloadTemplate.bind(this);
         this.downloadImage = downloadImage.bind(this);
@@ -108,31 +108,31 @@ class CardDesigner extends React.Component {
         }
     }
 
-    initProps() {
+    static initProps(props) {
         //Check if "onEdit" option is a function
-        if (this.props.onEdit && typeof this.props.onEdit !== "function")
+        if (props.onEdit && typeof props.onEdit !== "function")
         {
             console.error('JsCardRendering : onEdit option is not a function, option removed.');
-            delete this.props.onEdit;
+            delete props.onEdit;
         }
 
         //Check if "onSubmit" option is a function
-        if (this.props.onSubmit && typeof this.props.onSubmit !== "function")
+        if (props.onSubmit && typeof props.onSubmit !== "function")
         {
             console.error('JsCardRendering : onSubmit option is not a function, option removed.');
-            delete this.props.onSubmit;
+            delete props.onSubmit;
         }
 
-        if (!this.props.formatVersion) {
-            this.props.formatVersion = "3.0.0.0";
+        if (!props.formatVersion) {
+            props.formatVersion = "3.0.0.0";
         }
 
-        if (this.props.enableName === undefined) {
-            this.props.enableName = true;
+        if (props.enableName === undefined) {
+            props.enableName = true;
         }
 
-        if (this.props.enableLoad === undefined) {
-            this.props.enableLoad = true;
+        if (props.enableLoad === undefined) {
+            props.enableLoad = true;
         }
     }
 
@@ -709,6 +709,7 @@ CardDesigner.defaultProps = {
     },
     enableUnprintable: false,
     enableName: true,
+    enableLoad: true,
     onSubmit: undefined
 }
 

@@ -34,7 +34,7 @@ function ImageEditor({t, image, onChange}) {
             {!showEditor &&
                 <div className="row">
                     <div className="col-md-6 text-center">
-                        <img src={image} alt={t('properties.currentimage')} />
+                        <img src={image} alt={t('properties.currentimage')} class="img-fluid" />
                     </div>
                     <div className="col-md-6 list-group">
                         <button type="button" className="btn btn-primary" onClick={fileClick}>{t('create.loadfile')}</button>

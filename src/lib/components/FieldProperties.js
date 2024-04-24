@@ -9,6 +9,7 @@ import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { integerFieldProperty, floatFieldProperty } from "../edit/fields";
 
 function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
     const [name, setName] = useState(field.name);
@@ -16,7 +17,7 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
     const [width, setWidth] = useState(field.width);
     const [x, setX] = useState(field.x);
     const [y, setY] = useState(field.y);
-    const [z, setZ] = useState(field.z);
+    const [zIndex, setZIndex] = useState(field.zIndex);
     const [rotation, setRotation] = useState(field.rotation);
     const [useMacros, setUseMacros] = useState(field.useMacros);
 
@@ -28,7 +29,7 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
                 width: width,
                 x: x,
                 y: y,
-                z: z,
+                zIndex: zIndex,
                 rotation: rotation,
                 useMacros: useMacros
             });
@@ -46,27 +47,27 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.height')}</Form.Label>
-                <Form.Control type="number" placeholder="0" value={height} onChange={e => setHeight(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={height} onChange={e => setHeight(floatFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.width')}</Form.Label>
-                <Form.Control type="number" placeholder="0" value={width} onChange={e => setWidth(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={width} onChange={e => setWidth(floatFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.x')}</Form.Label>
-                <Form.Control type="number" placeholder="0" value={x} onChange={e => setX(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={x} onChange={e => setX(floatFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.y')}</Form.Label>
-                <Form.Control type="number" placeholder="0" value={y} onChange={e => setY(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={y} onChange={e => setY(floatFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.z')}</Form.Label>
-                <Form.Control type="number" placeholder="0" value={z} onChange={e => setZ(e.target.value)} />
+                <Form.Control type="number" placeholder="0" value={zIndex} onChange={e => setZIndex(integerFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>{t('properties.rotation')}</Form.Label>
-                <Form.Control type="number" placeholder="0" max="360" min="-360" value={rotation} onChange={e => setRotation(e.target.value)} />
+                <Form.Control type="number" placeholder="0" max="360" min="-360" value={rotation} onChange={e => setRotation(floatFieldProperty(e.target.value))} />
             </Form.Group>
             <Form.Group>
             <Form.Check type="checkbox" checked={useMacros} onChange={e => setUseMacros(e.target.checked)} />
