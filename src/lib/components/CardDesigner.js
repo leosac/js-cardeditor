@@ -123,6 +123,13 @@ class CardDesigner extends React.Component {
             delete props.onSubmit;
         }
 
+        //Check if "onLoaded" option is a function
+        if (props.onLoaded && typeof props.onLoaded !== "function")
+        {
+            console.error('JsCardRendering : onLoaded option is not a function, option removed.');
+            delete props.onLoaded;
+        }
+
         if (!props.formatVersion) {
             props.formatVersion = "3.0.0.0";
         }
@@ -138,7 +145,7 @@ class CardDesigner extends React.Component {
 
     getSides(all = false) {
         const sides = [ 'front' ];
-        if (all || this.state.hasBack) {
+        if ((all && this.props.allowBackSide) || this.state.hasBack) {
             sides.push('back');
         }
         return sides;
@@ -374,23 +381,19 @@ class CardDesigner extends React.Component {
         });
 
         this.newCard({size: CardHelper.getLayoutSizes(this.props.enabledCardSizes)[0].value}).then(() => {
+            this.animate();
             if (this.props.content !== undefined)
             {
-                setTimeout(() =>
-                {
-                    //TODO Make all functions related async
-                    this.fromJson(this.props.content).then(() => {
-                        setTimeout(() => {
-                            this.saveCurrentSnapshot();
-                        }, 2500);
-                    });
-                }, 1000);
+                //TODO Make all functions related async
+                this.fromJson(this.props.content);
+                setTimeout(() => {
+                    this.saveCurrentSnapshot();
+                }, 2500);
             }
             else
             {
                 this.saveCurrentSnapshot();
             }
-            this.animate();
         
             //On Window Resize
             $(window).on('resize', (e) => {
@@ -402,6 +405,10 @@ class CardDesigner extends React.Component {
                     }
                 });
             });
+
+            if (this.props.onLoaded) {
+                this.props.onLoaded(this);
+            }
         });
 
         let dropEventFonction = (event, ui, sideType) => {
@@ -500,9 +507,11 @@ class CardDesigner extends React.Component {
                                 <option value='portrait'>{t('create.orientation_portrait')}</option>
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group className="col-md-6">
-                            <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
-                        </Form.Group>
+                        {this.props.allowBackSide &&
+                            <Form.Group className="col-md-6">
+                                <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
+                            </Form.Group>
+                        }
                     </div>
 
                     <div className="row">
@@ -520,48 +529,50 @@ class CardDesigner extends React.Component {
                         </Form.Group>
                     </div>
             
-                    <Navbar bg="light" expand="lg">
-                        <Container>
-                            <Navbar.Collapse id="wdcbtns">
-                                <Nav className="me-auto">
-                                    {this.props.enableLoad &&
-                                        <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-file"]} /> {t('create.new')}</span>)}>
-                                            {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(size => {
-                                                return (
-                                                    <NavDropdown.Item key={size.value} href={'#new_' + size.value} onClick={() => this.newCard({size: size.value})}>{size.textv}{t(size.text)}</NavDropdown.Item>
-                                                )
-                                            })}
-                                        </NavDropdown>
-                                    }
-                                    {this.props.enableLoad &&
-                                        <Nav.Link href="#load_file" onClick={() => $('#load_file').trigger('click')} id="load_file_link">
-                                            <FontAwesomeIcon icon={["fas", "fa-cloud-upload-alt"]} /> {t('create.loadfile')}
-                                            <input type="file" id="load_file" accept=".json,.dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
-                                        </Nav.Link>
-                                    }
-                                    {this.checkFormatVersion(this.props.formatVersion, "3.0.0.0", false) && this.showCustomSize() &&
-                                        <Nav.Link href="#">
-                                            {t('properties.width')} <input id="templateSizeX" type="number" min="0" max="500" maxLength="4" value={this.getCustomSize('x')} onChange={e => this.editCustomSize('x', Number(e.target.value))} />
-                                            {t('properties.height')} <input id="templateSizeY" type="number" min="0" max="500" maxLength="4" value={this.getCustomSize('y')} onChange={e => this.editCustomSize('y', Number(e.target.value))} />
-                                        </Nav.Link>
-                                    }
-                                    <NavDivider />
-                                    {this.props.enableDownload &&
-                                        <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "cloud-download-alt"]} /> {t('create.download')}</span>)}>
-                                            <NavDropdown.Item href="#download_template" onClick={() => this.downloadTemplate()}>{t('create.download_template')}</NavDropdown.Item>
-                                            <NavDropdown.Item href="#download_image" onClick={() => this.downloadImage()}>{t('create.download_image')}</NavDropdown.Item>
-                                        </NavDropdown>
-                                    }
-                                    {this.props.enablePrint &&
-                                        <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-print"]} /> {t('create.print')}</span>)}>
-                                            <NavDropdown.Item href="#print_template" onClick={() => this.printTemplate()}>{t('create.print_template')}</NavDropdown.Item>
-                                            <NavDropdown.Item href="#print_card" onClick={() => this.printCard()}>{t('create.print_card')}</NavDropdown.Item>
-                                        </NavDropdown>
-                                    }
-                                </Nav>
-                            </Navbar.Collapse>
-                        </Container>
-                    </Navbar>
+                    {(this.props.enableLoad || this.props.enableDownload || this.props.enablePrint) &&
+                        <Navbar bg="light" expand="lg">
+                            <Container>
+                                <Navbar.Collapse id="wdcbtns">
+                                    <Nav className="me-auto">
+                                        {this.props.enableLoad &&
+                                            <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-file"]} /> {t('create.new')}</span>)}>
+                                                {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(size => {
+                                                    return (
+                                                        <NavDropdown.Item key={size.value} href={'#new_' + size.value} onClick={() => this.newCard({size: size.value})}>{size.textv}{t(size.text)}</NavDropdown.Item>
+                                                    )
+                                                })}
+                                            </NavDropdown>
+                                        }
+                                        {this.props.enableLoad &&
+                                            <Nav.Link href="#load_file" onClick={() => $('#load_file').trigger('click')} id="load_file_link">
+                                                <FontAwesomeIcon icon={["fas", "fa-cloud-upload-alt"]} /> {t('create.loadfile')}
+                                                <input type="file" id="load_file" accept=".json,.dpf" onChange={(e) => this.loadFile(e.target)} style={{display: 'none'}} />
+                                            </Nav.Link>
+                                        }
+                                        {this.checkFormatVersion(this.props.formatVersion, "3.0.0.0", false) && this.showCustomSize() &&
+                                            <Nav.Link href="#">
+                                                {t('properties.width')} <input id="templateSizeX" type="number" min="0" max="500" maxLength="4" value={this.getCustomSize('x')} onChange={e => this.editCustomSize('x', Number(e.target.value))} />
+                                                {t('properties.height')} <input id="templateSizeY" type="number" min="0" max="500" maxLength="4" value={this.getCustomSize('y')} onChange={e => this.editCustomSize('y', Number(e.target.value))} />
+                                            </Nav.Link>
+                                        }
+                                        <NavDivider />
+                                        {this.props.enableDownload &&
+                                            <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "cloud-download-alt"]} /> {t('create.download')}</span>)}>
+                                                <NavDropdown.Item href="#download_template" onClick={() => this.downloadTemplate()}>{t('create.download_template')}</NavDropdown.Item>
+                                                <NavDropdown.Item href="#download_image" onClick={() => this.downloadImage()}>{t('create.download_image')}</NavDropdown.Item>
+                                            </NavDropdown>
+                                        }
+                                        {this.props.enablePrint &&
+                                            <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-print"]} /> {t('create.print')}</span>)}>
+                                                <NavDropdown.Item href="#print_template" onClick={() => this.printTemplate()}>{t('create.print_template')}</NavDropdown.Item>
+                                                <NavDropdown.Item href="#print_card" onClick={() => this.printCard()}>{t('create.print_card')}</NavDropdown.Item>
+                                            </NavDropdown>
+                                        }
+                                    </Nav>
+                                </Navbar.Collapse>
+                            </Container>
+                        </Navbar>
+                    }
 
                     <Tabs defaultActiveKey="front">
                         {this.getSides(true).map((sideType, sideIndex) => {
@@ -710,7 +721,9 @@ CardDesigner.defaultProps = {
     enableUnprintable: false,
     enableName: true,
     enableLoad: true,
-    onSubmit: undefined
+    allowBackSide: false,
+    onSubmit: undefined,
+    onLoaded: undefined
 }
 
 export default withTranslation()(CardDesigner);

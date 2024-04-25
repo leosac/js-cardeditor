@@ -8,7 +8,8 @@ function createCardEditor(domContainer, props) {
       enableDownload: domContainer.dataset.enableDownload === 'true',
       enablePrint: domContainer.dataset.enablePrint === 'true',
       enableLoad: domContainer.dataset.enableLoad === 'true',
-      enableName: domContainer.dataset.enableName === 'true'
+      enableName: domContainer.dataset.enableName === 'true',
+      allowBackSide: domContainer.dataset.allowBackSide === 'true'
     };
   }
   const el = React.createElement(CardDesigner, props);
