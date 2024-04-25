@@ -173,7 +173,7 @@ async function onCardPaste(event, renderer) {
             }, 300);
 
             if (!await renderer.features.fields.pasteField(-1, -1)) {
-                const textdata = event.originalEvent.clipboardData ? event.originalEvent.clipboardData.getData('text/plain') :
+                /*const textdata = event.originalEvent.clipboardData ? event.originalEvent.clipboardData.getData('text/plain') :
                     (window.clipboardData ? window.clipboardData.getData('Text') : false);
                 if (textdata !== false) {
                     let newfield = renderer.features.fields.createField({type: 'label', value: textdata, autoSize: true, colorFill: -1},
@@ -181,7 +181,7 @@ async function onCardPaste(event, renderer) {
                     );
 
                     renderer.features.fields.selectField(newfield);
-                }
+                }*/
             }
         }
     }
