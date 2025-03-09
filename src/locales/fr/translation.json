@@ -241,6 +241,8 @@
     "history": "Historique...",
     "addfieldfromlist": "Ajouter un champ à partir de la liste...",
     "viewsettings": "Paramètres d'affichage...",
-    "background": "Définir l'arrière-plan..."
+    "background": "Définir l'arrière-plan...",
+    "bringtofront": "Mettre au premier plan",
+    "sendtoback": "Mettre en arrière plan"
   }
 }

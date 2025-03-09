@@ -45,18 +45,16 @@ function DesignerModal({t, show, editor, id, title, children, onClose, onSubmit,
     
     return (
         <Modal id={id} show={show} onHide={handleOnClose} onShow={handleOnShow}>
-            <Modal.Dialog>
-                <Modal.Header closeButton>
-                    <Modal.Title>{title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {children}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleOnSubmit}>{confirm}</Button>
-                    <Button variant="secondary" className="btnclose" onClick={handleOnClose}>{t('properties.cancel')}</Button>
-                </Modal.Footer>
-            </Modal.Dialog>
+            <Modal.Header closeButton>
+                <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {children}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={handleOnSubmit}>{confirm}</Button>
+                <Button variant="secondary" className="btnclose" onClick={handleOnClose}>{t('properties.cancel')}</Button>
+            </Modal.Footer>
         </Modal>
     );
 }

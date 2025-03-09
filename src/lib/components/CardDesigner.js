@@ -81,6 +81,7 @@ class CardDesigner extends React.Component {
         };
            
         this.state = {
+            factorytype: 'cursor',
             grid: {
                 enabled: false,
                 columns: 8,
@@ -193,6 +194,9 @@ class CardDesigner extends React.Component {
 
     changeFactory(factorytype, sideType) {
         this.sides[sideType].data.fields.factorytype = factorytype;
+        this.setState({
+            factorytype: factorytype
+        });
     }
 
     alignSelectedField(align, sideType) {
@@ -582,27 +586,27 @@ class CardDesigner extends React.Component {
                                         <Container>
                                             <Navbar.Collapse id={sideType + '_wdcbtns'}>
                                                 <Nav className="me-auto">
-                                                    <Nav.Link id={sideType + '_factory_cursor'} href="#cursor" onClick={() => this.changeFactory('cursor', sideType)}>
+                                                    <Nav.Link id={sideType + '_factory_cursor'} href="#cursor" onClick={() => this.changeFactory('cursor', sideType)} active={this.state.factorytype === 'cursor'}>
                                                         <FontAwesomeIcon icon={["fas", "fa-mouse-pointer"]} /> {t('create.cursor')}
                                                     </Nav.Link>
-                                                    <Nav.Link id={sideType + '_factory_label'} href="#label" onClick={() => this.changeFactory('label', sideType)}>
+                                                    <Nav.Link id={sideType + '_factory_label'} href="#label" onClick={() => this.changeFactory('label', sideType)} active={this.state.factorytype === 'label'}>
                                                         <FontAwesomeIcon icon={["fas", "fa-font"]} /> {t('create.label')}
                                                     </Nav.Link>
-                                                    <Nav.Link id={sideType + '_factory_rectangle'} href="#rectangle" onClick={() => this.changeFactory('rectangle', sideType)}>
+                                                    <Nav.Link id={sideType + '_factory_rectangle'} href="#rectangle" onClick={() => this.changeFactory('rectangle', sideType)} active={this.state.factorytype === 'rectangle'}>
                                                         <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle'}}></div> {t('create.rectangle')}
                                                     </Nav.Link>
-                                                    <Nav.Link id={sideType + '_factory_circle'} href="#circle" onClick={() => this.changeFactory('circle', sideType)}>
+                                                    <Nav.Link id={sideType + '_factory_circle'} href="#circle" onClick={() => this.changeFactory('circle', sideType)} active={this.state.factorytype === 'circle'}>
                                                         <div style={{display: 'inline-block', backgroundColor: '#777', width: '1em', height: '1em', verticalAlign: 'middle', WebkitBorderRadius: '100px', MozBorderRadius: '0.5em', OBorderRadius: '0.5em', borderRadius: '0.5em'}}></div> {t('create.circle')}
                                                     </Nav.Link>
-                                                    <Nav.Link id={sideType + '_factory_picture'} href="#picture" onClick={() => this.changeFactory('picture', sideType)}>
+                                                    <Nav.Link id={sideType + '_factory_picture'} href="#picture" onClick={() => this.changeFactory('picture', sideType)} active={this.state.factorytype === 'picture'}>
                                                         <FontAwesomeIcon icon={["fas", "fa-images"]} /> {t('create.picture')}
                                                     </Nav.Link>
                             
                                                     <NavDropdown title={(<span><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('common.codes')}</span>)}>
-                                                        <NavDropdown.Item id={sideType + '_factory_barcode'} href="#barcode" onClick={() => this.changeFactory('barcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.barcode')}</NavDropdown.Item>
-                                                        <NavDropdown.Item id={sideType + '_factory_qrcode'} href="#qrcode" onClick={() => this.changeFactory('qrcode', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.qrcode')}</NavDropdown.Item>
-                                                        <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('datamatrix', sideType)}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
-                                                        <NavDropdown.Item id={sideType + '_factory_pdf417'} href="#pdf417" onClick={() => this.changeFactory('pdf417', sideType)}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.pdf417')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_barcode'} href="#barcode" onClick={() => this.changeFactory('barcode', sideType)}  active={this.state.factorytype === 'barcode'}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.barcode')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_qrcode'} href="#qrcode" onClick={() => this.changeFactory('qrcode', sideType)} active={this.state.factorytype === 'qrcode'}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.qrcode')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_datamatrix'} href="#datamatrix" onClick={() => this.changeFactory('datamatrix', sideType)} active={this.state.factorytype === 'datamatrix'}><FontAwesomeIcon icon={["fas", "fa-qrcode"]} /> {t('create.datamatrix')}</NavDropdown.Item>
+                                                        <NavDropdown.Item id={sideType + '_factory_pdf417'} href="#pdf417" onClick={() => this.changeFactory('pdf417', sideType)} active={this.state.factorytype === 'pdf417'}><FontAwesomeIcon icon={["fas", "fa-barcode"]} /> {t('create.pdf417')}</NavDropdown.Item>
                                                     </NavDropdown>
                             
                                                     {this.props.enableUnprintable &&

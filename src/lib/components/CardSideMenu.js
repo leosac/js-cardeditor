@@ -35,6 +35,14 @@ function CardSideMenu({t, editor, cardside, canvas}) {
                             </Item>
                         </React.Fragment>
                     }
+                    <Separator />
+                    <Item onClick={() => cardside.bringToFront()}>
+                        <span><FontAwesomeIcon icon={["fas", "fa-eye"]} /> {t('menu.bringtofront')}</span>
+                    </Item>
+                    <Item onClick={() => cardside.sendToBack()}>
+                        <span><FontAwesomeIcon icon={["fas", "fa-eye-low-vision"]} /> {t('menu.sendtoback')}</span>
+                    </Item>
+                    <Separator />
                     <Item onClick={() => cardside.renderer.features.fields.cutField()}>
                         <span><FontAwesomeIcon icon={["fas", "fa-cut"]} /> {t('menu.cut')}</span>
                     </Item>

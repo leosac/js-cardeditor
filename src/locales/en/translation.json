@@ -241,6 +241,8 @@
     "history": "History...",
     "addfieldfromlist": "Add field from list...",
     "viewsettings": "View Settings...",
-    "background": "Set Background..."
+    "background": "Set Background...",
+    "bringtofront": "Bring to front",
+    "sendtoback": "Send to back"
   }
 }

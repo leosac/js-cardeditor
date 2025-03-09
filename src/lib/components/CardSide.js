@@ -7,7 +7,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { CardRenderer } from "@leosac/cardrendering";
 import { onCardClickUp, onCardClickDown, onCardMouseMove, onDragStart, onDragEnd, onDragMove, onSelectedSpriteCreated } from "../edit/onEvent";
-import { editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm } from '../edit/fields';
+import { editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm, bringToFront, sendToBack, } from '../edit/fields';
 import { editGrid, editGridConfirm } from '../edit/grid';
 import { editBackground } from '../edit/card';
 import GridSettings from "./GridSettings";
@@ -36,6 +36,8 @@ class CardSide extends React.Component {
         this.editFieldBorder = editFieldBorder.bind(this);
         this.addFieldFromList = addFieldFromList.bind(this);
         this.addFieldFromListConfirm = addFieldFromListConfirm.bind(this);
+        this.bringToFront = bringToFront.bind(this);
+        this.sendToBack = sendToBack.bind(this);
 
         this.state = {
             selectedfield: undefined,

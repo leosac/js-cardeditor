@@ -21,3 +21,7 @@
 .carddesign {
   text-align: center;
 }
+
+.navbar-nav > a.active {
+	font-weight: bold;
+}

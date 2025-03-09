@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { withTranslation } from "react-i18next";
 import { SketchPicker } from 'react-color';
+import { decimalToHexColor } from "@leosac/cardrendering";
 
 function ColorPicker({t, color, onChange}) {
     const [currentColor, setColor] = useState(color);
@@ -27,12 +28,22 @@ function ColorPicker({t, color, onChange}) {
                 boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
                 display: 'inline-block',
                 cursor: 'pointer'}} onClick={() => setShow(true)}>
-                <div style={{
-                    width: '4em',
-                    height: '1em',
-                    borderRadius: '2px',
-                    background: currentColor
-                }} />
+                {currentColor !== undefined && currentColor !== -1 &&
+                    <div style={{
+                        width: '4em',
+                        height: '1em',
+                        borderRadius: '2px',
+                        background: typeof(currentColor) === 'number' ? decimalToHexColor(currentColor) : currentColor
+                    }} />
+                }
+                {(currentColor === undefined || currentColor === -1) &&
+                    <div style={{
+                        width: '4em',
+                        height: '1em',
+                        borderRadius: '2px',
+                        background: 'repeating-linear-gradient(-55deg, #444444, #444444 5px, #ffffff 5px, #ffffff 10px'
+                    }} />
+                }
             </div>
             { show &&
                 <div style={{

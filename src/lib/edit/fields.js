@@ -98,6 +98,33 @@ async function addFieldFromListConfirm(f)
     }
 }
 
+function bringToFront()
+{
+    if (this.renderer.data.fields.selected.length > 0)
+    {
+        this.renderer.data.fields.selected.forEach(field => {
+            if (field.options.zIndex === undefined) {
+                field.options.zIndex = 0;
+            }
+            field.options.zIndex += 9;
+        });
+        this.renderer.sortByZIndex();
+        this.renderer.handleOnChange();
+    }
+}
+
+function sendToBack()
+{
+    if (this.renderer.data.fields.selected.length > 0)
+    {
+        this.renderer.data.fields.selected.forEach(field => {
+            field.options.zIndex = 0;
+        });
+        this.renderer.sortByZIndex();
+        this.renderer.handleOnChange();
+    }
+}
+
 export {
-    editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm, integerFieldProperty, floatFieldProperty
+    editField, editFieldBorder, editInternalField, editConditionalRenderingField, addFieldFromList, addFieldFromListConfirm, integerFieldProperty, floatFieldProperty, bringToFront, sendToBack
 }

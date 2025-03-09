@@ -48,9 +48,20 @@ function ImageEditor({t, image, onChange}) {
             {showEditor &&
                 <FilerobotImageEditor
                     source={image}
-                    tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.FILTERS, TABS.WATERMARK]}
+                    tabsIds={[TABS.ADJUST, TABS.FINETUNE, TABS.FILTERS, TABS.ANNOTATE, TABS.WATERMARK, TABS.RESIZE]}
                     onClose={() => setShowEditor(false)}
                     onSave={(edited) => onChange(edited.imageBase64)}
+                    onBeforeSave={() => false}
+                    closeAfterSave={true}
+                    Crop={{
+                        presetsItems: [
+                            {
+                                titleKey: 'ID Photo',
+                                descriptionKey: '3,5:4,5',
+                                ratio: 7 / 9
+                            }
+                        ]
+                    }}
                 />
             }
         </div>
