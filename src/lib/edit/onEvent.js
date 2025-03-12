@@ -428,7 +428,9 @@ function onDragMove(event, renderer, field)
                     const previousxy = {x: field.position.x, y: field.position.y};
 
                     // Quick fix for rotation (field.rotation -> Disable StepAlign)
-                    renderer.features.fields.moveField(field, mx, my, true);
+                    // We move all selected fields and not only this specific field.
+                    // Otherwise we would callrenderer.features.fields.moveField(field, mx, my, true);
+                    renderer.features.fields.moveSelectedFields(mx, my, true);
                     renderer.features.fields.highlightFieldPositions(field, previousxy);
                 }
                 else if (field.resizing)
