@@ -27,6 +27,12 @@ function loadTemplate(tpl) {
         layout: tpl.layout,
         hasBack: (tpl.sides.back !== undefined)
     });
+
+    if (tpl.layout.size === 'custom') {
+        this.editCustomSize('x', tpl.layout.width);
+        this.editCustomSize('y', tpl.layout.height);
+    }
+    
     this.sides.front.createCardStage(tpl.layout, tpl.sides.front, false);
     if (this.sides.back) {
         this.sides.back.createCardStage(tpl.layout, tpl.sides.back, false);

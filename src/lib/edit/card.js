@@ -3,7 +3,6 @@
  *
  * @license GNU LGPL version 3
  **/
-import $ from 'jquery';
 import "jquery-ui";
 import "jquery-ui/ui/widgets/draggable";
 import "jquery-ui/ui/widgets/droppable";
@@ -33,25 +32,19 @@ function newCard(layout)
     }));
 }
 
-function editCustomSize(side)
+function editCustomSize(side, val)
 {
     //1px = 0.2645833333 mm
     //1in = 25.4mm
-
-    if (side === 'x')
-    {
-        this.layoutsizes['px']['custom'][0] = Number($("#templateSizeX").val());
-        this.layoutsizes['mm']['custom'][0] = Number(Number($("#templateSizeX").val() * 0.2645833333).toFixed(4));
-        this.layoutsizes['in']['custom'][0] = Number(Number(Number($("#templateSizeX").val() * 0.2645833333) / 25,4).toFixed(4))
-    }
-    else
-    {
-        this.layoutsizes['px']['custom'][1] = Number($("#templateSizeY").val());
-        this.layoutsizes['mm']['custom'][1] = Number(Number($("#templateSizeY").val() * 0.2645833333).toFixed(4));
-        this.layoutsizes['in']['custom'][1] = Number(Number(Number($("#templateSizeY").val() * 0.2645833333) / 25,4).toFixed(4));
+    
+    const i = (side === 'x') ? 0 : 1;
+    if (i === 0) {
+        this.changeLayout({width: val});
+    } else {
+        this.changeLayout({height: val});
     }
 
-    newCard.call(this, 'custom');
+    newCard.call(this, { size: 'custom' });
 }
 
 export {

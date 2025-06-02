@@ -99,12 +99,11 @@ class CardDesigner extends React.Component {
             alerts: [],
 
             hasBack: false,
-            cardwidth: 0,
-            cardheight: 0,
-            cardborder: 3,
             layout: {
                 size: CardHelper.getLayoutSizes(this.props.enabledCardSizes)[0].value,
-                orientation: 'landscape'
+                orientation: 'landscape',
+                width: 0,
+                height: 0
             }
         }
     }
@@ -211,9 +210,9 @@ class CardDesigner extends React.Component {
 
     getCustomSize(axe) {
         if (axe === "x")
-            return (this.state.cardwidth);
+            return (this.state.layout.width);
         else
-            return (this.state.cardheight);
+            return (this.state.layout.height);
     }
 
     showMessageInvalidFormatVersion(current) {
@@ -533,7 +532,7 @@ class CardDesigner extends React.Component {
                         </Form.Group>
                     </div>
             
-                    {(this.props.enableLoad || this.props.enableDownload || this.props.enablePrint) &&
+                    {(this.props.enableLoad || this.props.enableDownload || this.props.enablePrint || this.showCustomSize()) &&
                         <Navbar bg="light" expand="lg">
                             <Container>
                                 <Navbar.Collapse id="wdcbtns">
