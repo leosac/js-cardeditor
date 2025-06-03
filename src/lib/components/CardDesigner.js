@@ -301,14 +301,16 @@ class CardDesigner extends React.Component {
         });
     }
 
-    changeLayout(layout) {
+    changeLayout(layout, callback = undefined) {
         const newlayout = {
             ...this.state.layout,
             ...layout
         };
+        
         this.setState({
             layout: newlayout
-        });
+        }, callback);
+        
         this.updateRenderersLayout(newlayout);
     }
 

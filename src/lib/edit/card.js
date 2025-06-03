@@ -38,13 +38,13 @@ function editCustomSize(side, val)
     //1in = 25.4mm
     
     const i = (side === 'x') ? 0 : 1;
+    let newlayout = { size: 'custom', ...this.state.layout };
     if (i === 0) {
-        this.changeLayout({width: val});
+        newlayout.width = val;
     } else {
-        this.changeLayout({height: val});
+        newlayout.height = val;
     }
-
-    newCard.call(this, { size: 'custom' });
+    this.changeLayout(newlayout, () => newCard.call(this, newlayout));
 }
 
 export {
