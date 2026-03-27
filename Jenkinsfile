@@ -4,8 +4,9 @@ pipeline {
 	    stage('Build') {
             steps {
                 nodejs(nodeJSInstallationName: 'node20') {
-                    sh 'npm ci'
-					sh 'npm run build --if-present'
+                    sh 'corepack enable'
+					sh 'yarn install'
+					sh 'yarn run build'
                 }
             }
         }
