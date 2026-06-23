@@ -10,34 +10,32 @@ import {
 } from './onEvent';
 
 function createResizeBox(cardside, position, scale) {
+    const container = new PIXI.Container();
     const rbox = new PIXI.Graphics();
-    rbox.lineStyle(1, 0xffffff, 1);
-    rbox.beginFill(0x000000);
     if ($(window).width() <= 759 || $(window).height() <= 759)
-        rbox.drawRect(0, 0, 12 / scale.x, 12 / scale.y);
+        rbox.rect(0, 0, 12 / scale.x, 12 / scale.y);
     else
-        rbox.drawRect(0, 0, 8 / scale.x, 8 / scale.y);
-    rbox.zindex = -1001;
-    rbox.endFill();
-    rbox.interactive = true;
-    rbox.buttonMode = true;
+        rbox.rect(0, 0, 8 / scale.x, 8 / scale.y);
+    rbox.fill(0x000000).stroke({width: 1, color: 0xffffff});
+    container.addChild(rbox);
+    container.eventMode  = 'static';
     if (position === 'top' || position === 'bottom')
     {
-        rbox.cursor = 'ns-resize';
+        container.cursor = 'ns-resize';
     }
     else if (position === 'rightBottom' || position === 'leftTop')
     {
-        rbox.cursor = 'nwse-resize';
+        container.cursor = 'nwse-resize';
     }
     else if (position === 'leftBottom' || position === 'rightTop')
     {
-        rbox.cursor = 'nesw-resize';
+        container.cursor = 'nesw-resize';
     }
     else
     {
-        rbox.cursor = 'ew-resize';
+        container.cursor = 'ew-resize';
     }
-    rbox
+    container
         .on('mousedown', (event) =>
         {
             onResizeStart(event, cardside, position);
@@ -46,19 +44,17 @@ function createResizeBox(cardside, position, scale) {
         {
             onResizeStart(event, cardside, position);
         });
-    return rbox;
+    return container;
 }
 
 function createRotationBox(cardside, position, scale) {
+    const container = new PIXI.Container();
     const rbox = new PIXI.Graphics();
-    rbox.lineStyle(1, 0xffffff, 1);
-    rbox.beginFill(0x000000);
-    rbox.drawRect(0, 0, 6 / scale.x, 6 / scale.y);
-    rbox.endFill();
-    rbox.interactive = true;
-    rbox.buttonMode = true;
-    rbox.cursor = 'grab';
-    rbox
+    rbox.rect(0, 0, 6 / scale.x, 6 / scale.y).fill(0x000000).stroke({width: 1, color: 0xffffff});
+    container.addChild(rbox);
+    container.eventMode  = 'static';
+    container.cursor = 'grab';
+    container
         .on('mousedown', (event) =>
         {
             onRotationStart(event, cardside, position);
@@ -67,7 +63,7 @@ function createRotationBox(cardside, position, scale) {
         {
             onRotationStart(event, cardside, position);
         });
-    return rbox;
+    return container;
 }
 
 export {

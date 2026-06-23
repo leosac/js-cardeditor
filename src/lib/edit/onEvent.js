@@ -33,6 +33,7 @@ async function onCardClickDown(event, renderer)
             renderer.graphics.stage.selectarea = new PIXI.Graphics();
             renderer.graphics.stage.selectarea.alpha = 0.3;
             renderer.graphics.stage.selectarea.position.set(position.x, position.y);
+            renderer.graphics.stage.selectarea.eventMode = 'none';
             renderer.graphics.card.addChild(renderer.graphics.stage.selectarea);
         }
 
@@ -58,9 +59,10 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
         if (topRuler.cursorTracker === undefined || topRuler.cursorTracker === null)
         {
             topRuler.cursorTracker = new PIXI.Graphics();
-            topRuler.cursorTracker.lineStyle(1, 0xffff00)
-                .moveTo(0, 1)
-                .lineTo(0, topRuler.height - 1);
+            topRuler.cursorTracker.moveTo(0, 1)
+                .lineTo(0, topRuler.height - 1)
+                .stroke({width: 1, color: 0xffff00});
+            topRuler.eventMode = 'none';
             topRuler.addChild(topRuler.cursorTracker);
         }
         topRuler.cursorTracker.position.set(position.x - topRuler.x, 0);
@@ -68,9 +70,10 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
         if (leftRuler.cursorTracker === undefined || leftRuler.cursorTracker === null)
         {
             leftRuler.cursorTracker = new PIXI.Graphics();
-            leftRuler.cursorTracker.lineStyle(1, 0xffff00)
-                .moveTo(1, 0)
-                .lineTo(leftRuler.width - 1, 0);
+            leftRuler.cursorTracker.moveTo(1, 0)
+                .lineTo(leftRuler.width - 1, 0)
+                .stroke({width: 1, color: 0xffff00});
+            leftRuler.eventMode = 'none';
             leftRuler.addChild(leftRuler.cursorTracker);
         }
         leftRuler.cursorTracker.position.set(0, position.y - leftRuler.y);
@@ -79,9 +82,6 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
     if (renderer.graphics.stage.selectarea !== undefined && renderer.graphics.stage.selectarea !== null)
     {
         renderer.graphics.stage.selectarea.clear();
-        renderer.graphics.stage.selectarea.lineStyle(1, 0x000000);
-        renderer.graphics.stage.selectarea.beginFill(0xa8a8a8);
-
         //If x or y negative, we set x/y with negatives values and draw with width/height set as positive
         //If not, x/y set 0, draw with positive values
         //This fix a problem with selected area in reverse
@@ -100,8 +100,7 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
             areaypos = areaheight;
             areaheight = Math.abs(areaheight);
         }
-        renderer.graphics.stage.selectarea.drawRect(areaxpos, areaypos, areawidth, areaheight);
-        renderer.graphics.stage.selectarea.endFill();
+        renderer.graphics.stage.selectarea.rect(areaxpos, areaypos, areawidth, areaheight).fill(0xa8a8a8).stroke({width: 1, color: 0x000000});
     }
 
     // We forward the event to selected fields

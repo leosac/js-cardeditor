@@ -16,6 +16,9 @@ async function printTemplate()
         });
     }
 
+    const oldGridEnabled = data.grid.enabled;
+    const oldGridRuler = data.grid.ruler;
+    const oldCardBorder = data.card.border;
     // Be sure we hide visual helpers
     data.grid.enabled = false;
     data.grid.ruler = false;
@@ -26,10 +29,10 @@ async function printTemplate()
     let height = 0;
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
-        height += renderer.graphics.renderer.view.height;
+        height += renderer.graphics.renderer.canvas.height;
     });
 
-    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides.front.graphics.renderer.view.width);
+    const mywindow = window.open('', 'Card', 'height=' + height + ',width=' + this.sides.front.graphics.renderer.canvas.width);
     mywindow.document.write('<html><head><title>Card</title>');
     if (this.state.layout.size === 'cr80') {
         mywindow.document.write('<style>@page { size: 85.725mm 53.975mm; margin: 0; } body { overflow-x: visible; overflow-y: visible; }</style>');
@@ -39,7 +42,7 @@ async function printTemplate()
     this.getSides.call(this).forEach(sideType => {
         const renderer = this.sides[sideType];
         renderer.graphics.renderer.render(renderer.graphics.stage);
-        mywindow.document.write('<img src="' + renderer.graphics.renderer.view.toDataURL("image/png") + '" style="width: 100%; height: 100%" />');
+        mywindow.document.write('<img src="' + renderer.graphics.renderer.canvas.toDataURL("image/png") + '" style="width: 100%; height: 100%" />');
     });
 
     mywindow.document.write('</body></html>');
@@ -61,6 +64,12 @@ async function printTemplate()
             mywindow.addEventListener("afterprint", function(e) {mywindow.close();});
     else
         mywindow.close();
+
+    // Restore visual helpers
+    data.grid.enabled = oldGridEnabled;
+    data.grid.ruler = oldGridRuler;
+    data.card.border = oldCardBorder;
+    await reloadTemplate.call(this);
 }
 
 function getAllNamedFields()

@@ -1,42 +1,62 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
-  entry: './src/lib/dom.js',
-  output: {
-    filename: 'cardeditor.js',
-    library: 'cardeditor',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  optimization: {
-    minimize: false
-  },
-  module: {
-    rules: [
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', { targets: {node: "current"} }],
-              "@babel/preset-react"
-            ]
-          }
-        }
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /src\/locales\/*\/.json/,
-        loader: "@alienfast/i18next-loader",
-      }
+module.exports = (env, argv) => {
+  const isProd = argv.mode === 'production';
+  return {
+    entry: isProd ? './src/lib/dom.js' : './src/index.js',
+    output: {
+      filename: 'cardeditor.js',
+      chunkFilename: '[name].js',
+      publicPath: 'auto',
+      library: 'cardeditor',
+      path: path.resolve(__dirname, 'dist'),
+      clean: true
+    },
+    optimization: {
+      minimize: false
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: './public/index.html'
+      })
     ],
-  },
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'  
-  }
+    module: {
+      rules: [
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', { targets: {node: "current"} }],
+                "@babel/preset-react"
+              ]
+            }
+          }
+        },
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
+        {
+          test: /src\/locales\/*\/.json/,
+          loader: "@alienfast/i18next-loader",
+        }
+      ],
+    },
+    devServer: {
+      static: {
+        directory: path.join(__dirname, 'public')
+      },
+      port: 3000,
+      hot: true,
+      historyApiFallback: true
+    },
+    externals: isProd ? {
+      'react': 'React',
+      'react-dom': 'ReactDOM'  
+    } : {}
+  };
 };
