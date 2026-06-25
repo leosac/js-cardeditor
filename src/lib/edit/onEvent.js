@@ -62,7 +62,7 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
             topRuler.cursorTracker.moveTo(0, 1)
                 .lineTo(0, topRuler.height - 1)
                 .stroke({width: 1, color: 0xffff00});
-            topRuler.eventMode = 'none';
+            topRuler.cursorTracker.eventMode = 'none';
             topRuler.addChild(topRuler.cursorTracker);
         }
         topRuler.cursorTracker.position.set(position.x - topRuler.x, 0);
@@ -73,7 +73,7 @@ function onCardMouseMove(event, renderer, topRuler, leftRuler) {
             leftRuler.cursorTracker.moveTo(1, 0)
                 .lineTo(leftRuler.width - 1, 0)
                 .stroke({width: 1, color: 0xffff00});
-            leftRuler.eventMode = 'none';
+            leftRuler.cursorTracker.eventMode = 'none';
             leftRuler.addChild(leftRuler.cursorTracker);
         }
         leftRuler.cursorTracker.position.set(0, position.y - leftRuler.y);
@@ -401,6 +401,7 @@ function onRotationStart(event, renderer, position)
     selectedFieldRef.global = event.global;
     selectedFieldRef.alpha = 0.5;
     selectedFieldRef.rotatingFrom = position;
+    selectedFieldRef.originalRotation = selectedFieldRef.rotation;
     selectedFieldRef.rotating = true;
     if (selectedFieldRef.selected !== null)
     {
@@ -508,31 +509,14 @@ function onDragMove(event, renderer, field)
                 {
                     // Don't rotate if multiselection
                     if (renderer.data.fields.selected.length === 1) {
-                        let x = 0;
-                        let y = 0;
-                        if (field.rotatingFrom === 'rightBottom') {
-                            x = field.position.x + field.options.width;
-                            y = field.position.y + field.options.height;
-                        } else if (field.rotatingFrom === 'leftBottom') {
-                            x = field.position.x;
-                            y = field.position.y + field.options.height;
-                        }
-                        else if (field.rotatingFrom === 'leftTop') {
-                            x = field.position.x;
-                            y = field.position.y;
-                        }
-                        else if (field.rotatingFrom === 'rightTop') {
-                            x = field.position.x + field.options.width;
-                            y = field.position.y;
-                        }
+                        const centerX = field.position.x + field.options.width / 2;
+                        const centerY = field.position.y + field.options.height / 2;
 
-                        let angle = Math.atan2(newPosition.y - y, newPosition.x - x);
-                        if (field.options.rotation !== undefined) {
-                            angle += field.rotation;
-                        }
+                        const startMouseAngle = Math.atan2(field.global.y - centerY, field.global.x - centerX);
+                        const mouseAngle = Math.atan2(newPosition.y - centerY, newPosition.x - centerX);
 
-                        field.rotation = angle;
-                        field.options.rotation = angle;
+                        field.rotation = field.originalRotation + (mouseAngle - startMouseAngle);
+                        field.options.rotation = field.rotation;
                     }
                 }
 
