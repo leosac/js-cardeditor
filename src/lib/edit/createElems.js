@@ -9,15 +9,19 @@ import {
     onResizeStart, onRotationStart
 } from './onEvent';
 
+function getResizeBoxSize() {
+    if ($(window).width() <= 759 || $(window).height() <= 759)
+        return 12;
+    else
+        return 8;
+}
+
 function createResizeBox(cardside, position, scale) {
     const container = new PIXI.Container();
     container.eventMode  = 'static';
     const rbox = new PIXI.Graphics();
-    if ($(window).width() <= 759 || $(window).height() <= 759)
-        rbox.rect(0, 0, 12 / scale.x, 12 / scale.y);
-    else
-        rbox.rect(0, 0, 8 / scale.x, 8 / scale.y);
-    rbox.fill(0x000000).stroke({width: 1, color: 0xffffff});
+    const boxsize = getResizeBoxSize();
+    rbox.rect(0, 0, boxsize / scale.x, boxsize / scale.y).fill(0x000000).stroke({width: 1, color: 0xffffff});
     container.addChild(rbox);
     if (position === 'top' || position === 'bottom')
     {
@@ -67,5 +71,5 @@ function createRotationBox(cardside, position, scale) {
 }
 
 export {
-    createResizeBox, createRotationBox
+    createResizeBox, createRotationBox, getResizeBoxSize
 }

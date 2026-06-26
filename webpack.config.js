@@ -35,7 +35,7 @@ module.exports = (env, argv) => {
             options: {
               presets: [
                 ['@babel/preset-env', { targets: {node: "current"} }],
-                "@babel/preset-react"
+                ["@babel/preset-react", { runtime: isProd ? "classic" : "automatic" }]
               ]
             }
           }

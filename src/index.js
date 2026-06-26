@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import 'pixi.js/events'; // tmp fix for mixin events to be registered
+import './pixi-init';
 import "./i18n";
 import { CardDesigner } from "./lib";
 

@@ -1,6 +1,9 @@
 import React from "react";
+import { pixiEventsLoaded } from '../pixi-init';
 import "../i18n";
 import { CardDesigner } from "./index";
+
+void pixiEventsLoaded;
 
 function createCardEditor(domContainer, props) {
   if (props === undefined) {

@@ -330,45 +330,57 @@ function onSelectedSpriteCreated(renderer, selectgraph, boxwidth, boxheight, sca
         rsRightTop.y = -((rsRightTop.height + 2) / 2);
         selectgraph.addChild(rsRightTop);
     } else {
-        const rstop = createResizeBox(renderer, 'top', scale);
-        rstop.x = (boxwidth - 6) / 2;
-        rstop.y = -((rstop.height + 2) / 2);
-        selectgraph.addChild(rstop);
-
-        const rsbottom = createResizeBox(renderer, 'bottom', scale);
-        rsbottom.x = (boxwidth - 6) / 2;
-        rsbottom.y = boxheight - ((rsbottom.height - 2) / 2);
-        selectgraph.addChild(rsbottom);
-
-        const rsleft = createResizeBox(renderer, 'left', scale);
-        rsleft.x = -((rsleft.width + 3) / 2);
-        rsleft.y = (boxheight - 6) / 2;
-        selectgraph.addChild(rsleft);
-
-        const rsright = createResizeBox(renderer, 'right', scale);
-        rsright.x = boxwidth - ((rsleft.width - 3) / 2);
-        rsright.y = (boxheight - 6) / 2;
-        selectgraph.addChild(rsright);
-
         const rsRightBot = createResizeBox(renderer, 'rightBottom', scale);
-        rsRightBot.x = boxwidth - ((rsleft.width - 3) / 2);
-        rsRightBot.y = boxheight - ((rsbottom.height - 2) / 2);
+        rsRightBot.x = boxwidth - ((rsRightBot.width - 3) / 2);
+        rsRightBot.y = boxheight - ((rsRightBot.height - 2) / 2);
         selectgraph.addChild(rsRightBot);
 
         const rsLeftBot = createResizeBox(renderer, 'leftBottom', scale);
         rsLeftBot.x = -((rsLeftBot.width + 3) / 2);
-        rsLeftBot.y = boxheight - ((rsbottom.height - 2) / 2);
+        rsLeftBot.y = boxheight - ((rsLeftBot.height - 2) / 2);
         selectgraph.addChild(rsLeftBot);
 
-        const rsLeftTop = createResizeBox(renderer, 'leftTop', scale);
-        rsLeftTop.x = -((rsLeftBot.width + 3) / 2);
-        rsLeftTop.y = -((rstop.height + 2) / 2);
-        selectgraph.addChild(rsLeftTop);
+        if (boxheight > rsRightBot.height / 2)
+        {
+            const rsLeftTop = createResizeBox(renderer, 'leftTop', scale);
+            rsLeftTop.x = -((rsLeftTop.width + 3) / 2);
+            rsLeftTop.y = -((rsLeftTop.height + 2) / 2);
+            selectgraph.addChild(rsLeftTop);
 
-        const rsRightTop = createResizeBox(renderer, 'rightTop', scale);
-        rsRightTop.x = boxwidth - ((rsleft.width - 3) / 2);
-        rsRightTop.y = -((rstop.height + 2) / 2);
-        selectgraph.addChild(rsRightTop);
+            const rsRightTop = createResizeBox(renderer, 'rightTop', scale);
+            rsRightTop.x = boxwidth - ((rsRightTop.width - 3) / 2);
+            rsRightTop.y = -((rsRightTop.height + 2) / 2);
+            selectgraph.addChild(rsRightTop);
+
+            if (boxwidth > rsRightBot.width * 2)
+            {
+                const rstop = createResizeBox(renderer, 'top', scale);
+                rstop.x = (boxwidth - rstop.width) / 2;
+                rstop.y = -((rstop.height + 2) / 2);
+                selectgraph.addChild(rstop);
+            }
+        }
+
+        if (boxwidth > rsRightBot.width * 2)
+        {
+            const rsbottom = createResizeBox(renderer, 'bottom', scale);
+            rsbottom.x = (boxwidth - rsbottom.width) / 2;
+            rsbottom.y = boxheight - ((rsbottom.height - 2) / 2);
+            selectgraph.addChild(rsbottom);
+        }
+
+        if (boxheight > rsRightBot.height * 2)
+        {
+            const rsleft = createResizeBox(renderer, 'left', scale);
+            rsleft.x = -((rsleft.width + 3) / 2);
+            rsleft.y = (boxheight - rsleft.height) / 2;
+            selectgraph.addChild(rsleft);
+
+            const rsright = createResizeBox(renderer, 'right', scale);
+            rsright.x = boxwidth - ((rsleft.width - 3) / 2);
+            rsright.y = (boxheight - rsright.height) / 2;
+            selectgraph.addChild(rsright);
+        }
     }
 }
 
