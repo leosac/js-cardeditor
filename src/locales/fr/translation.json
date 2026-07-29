@@ -144,7 +144,8 @@
     "addfield": "Ajouter un champ",
     "printfields": "Champs à imprimer",
     "currentimage": "Image actuelle",
-    "prop_border": "Bordure"
+    "prop_border": "Bordure",
+    "keepFieldSize": "Conserver la taille du champ actuel"
   }
   ,"macros": {
     "tooltip": "$TIMESTAMP(DateTime)\n$UPP(x)\n$LOW(x)\n$EXPLODE(<index>, <separator>, x)\n$CONTAINS(needle, x[, success][, error])"

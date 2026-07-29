@@ -225,7 +225,6 @@ function onCardKeyUp(event, renderer) {
 
 function onDragStart(event, cardside, renderer, field) {
     const factorytype = renderer.data.fields.factorytype ?? 'cursor';
-console.log("onDragStart");
     $(':focus').blur();
     if (factorytype === 'cursor') {
         if (renderer.data.clicks !== 1) {

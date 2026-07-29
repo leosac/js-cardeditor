@@ -144,7 +144,8 @@
     "addfield": "Add Field",
     "printfields": "Print Fields",
     "currentimage": "Current image",
-    "prop_border": "Border"
+    "prop_border": "Border",
+    "keepFieldSize": "Keep current field size"
   }
   ,"macros": {
     "tooltip": "$TIMESTAMP(DateTime)\n$UPP(x)\n$LOW(x)\n$EXPLODE(<index>, <separator>, x)\n$CONTAINS(needle, x[, success][, error])"
