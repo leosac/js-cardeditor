@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
@@ -13,6 +13,7 @@ import { integerFieldProperty } from "../edit/fields";
 function FieldBorderProperties({t, border, show, editor, onClose, onSubmit}) {
     const [width, setWidth] = useState(border.width ?? 0);
     const [color, setColor] = useState(border.color ?? '#000000');
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -27,7 +28,7 @@ function FieldBorderProperties({t, border, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="fieldborder_properties" show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_border')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`fieldborder_properties-${id}`} show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_border')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.borderwidth')}</Form.Label>
                 <Form.Control type="number" placeholder="1" min="0" max="100" value={width} onChange={e => setWidth(integerFieldProperty(e.target.value))} />

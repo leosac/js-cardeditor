@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
@@ -20,6 +20,7 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
     const [zIndex, setZIndex] = useState(field.zIndex);
     const [rotation, setRotation] = useState(field.rotation);
     const [useMacros, setUseMacros] = useState(field.useMacros);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -40,7 +41,7 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="field_properties" show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_internal')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`field_properties-${id}`} show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_internal')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.name')}</Form.Label>
                 <Form.Control type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />

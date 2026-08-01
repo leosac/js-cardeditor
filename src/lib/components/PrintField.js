@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DisplayPrintFieldEntry from "./DisplayPrintFieldEntry";
@@ -12,6 +12,7 @@ function PrintField({t, isAdmin, fields, updateFields}) {
     const [name, setName] = useState('');
     const [type, setType] = useState('label');
     const [showModal, setShowModal] = useState('showModal');
+    const id = useId();
 
     if (!isAdmin)
         return (<div></div>);
@@ -70,7 +71,7 @@ function PrintField({t, isAdmin, fields, updateFields}) {
                 </table>
             </div>
 
-            <DesignerModal id="addfieldmodal" confirm={t('common.add')} title={t('common.addfield')} show={showModal} onClose={() => setShowModal(false)} onSubmit={addField}>
+            <DesignerModal id={`addfieldmodal-${id}`} confirm={t('common.add')} title={t('common.addfield')} show={showModal} onClose={() => setShowModal(false)} onSubmit={addField}>
                 <Form.Group>
                     <Form.Label>{t('properties.name')}</Form.Label>
                     <Form.Control type="text" placeholder="Name" value={name} onChange={setName(e.target.value)} />

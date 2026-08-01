@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from "react";
+import { useId, useState } from "react";
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import { CardHelper } from "@leosac/cardrendering";
@@ -22,6 +22,7 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
     const [autoSize, setAutoSize] = useState(field.autoSize);
     const [scaleFont, setScaleFont] = useState(field.scaleFont);
     const [wordBreak, setWordBreak] = useState(field.wordBreak);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -45,7 +46,7 @@ function LabelProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="label_properties" show={show} editor={editor} title={t('properties.prop_label')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`label_properties-${id}`} show={show} editor={editor} title={t('properties.prop_label')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />

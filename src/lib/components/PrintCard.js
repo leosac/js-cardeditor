@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 import Form from 'react-bootstrap/Form';
@@ -15,6 +15,7 @@ function PrintCard({t, show, editor, fields, onClose, onSubmit}) {
         initValues[field.name] = field.value;
     });
     const [values, setValues] = useState(initValues);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -32,7 +33,7 @@ function PrintCard({t, show, editor, fields, onClose, onSubmit}) {
     }
 
     return(
-        <DesignerModal id="printcard" show={show} editor={editor} confirm={t('create.print')} title={t('create.print_card')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`printcard-${id}`} show={show} editor={editor} confirm={t('create.print')} title={t('create.print_card')} onClose={onClose} onSubmit={modalSubmit}>
             <div>
                 <div className="alert alert-info" role="alert">Please enter below the information for the new card to
                     jscardrendering.<br/>Only <em>Label</em>, <em>Picture</em> and <em>QRCode</em> fields with a valid name

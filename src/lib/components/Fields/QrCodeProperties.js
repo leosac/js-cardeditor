@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "../DesignerModal";
@@ -11,6 +11,7 @@ import DesignerModal from "../DesignerModal";
 function QrCodeProperties({t, field, show, editor, onClose, onSubmit}) {
     const [value, setValue] = useState(field.value);
     const [ecLevel, setEcLevel] = useState(field.ecLevel);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -25,7 +26,7 @@ function QrCodeProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="qrCode_properties" show={show} editor={editor} title={t('properties.prop_qrcode')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`qrCode_properties-${id}`} show={show} editor={editor} title={t('properties.prop_qrcode')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />

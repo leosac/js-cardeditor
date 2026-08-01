@@ -3,13 +3,14 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 
 function AddFieldFromList({t, fieldlist, show, editor, onClose, onSubmit}) {
     const [selectedField, setSelectedField] = useState();
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -21,7 +22,7 @@ function AddFieldFromList({t, fieldlist, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="addfieldfromlist" show={show} editor={editor} confirm={t('common.add')} title={t('common.add')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`addfieldfromlist-${id}`} show={show} editor={editor} confirm={t('common.add')} title={t('common.add')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('common.name')}</Form.Label>
                 <Form.Control as="select" value={selectedField} onChange={e => setSelectedField(e.target.value)}>

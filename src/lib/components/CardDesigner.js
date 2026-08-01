@@ -494,9 +494,9 @@ class CardDesigner extends React.Component {
                         })}
                     </div>
                     {this.props.enableName &&
-                        <div className="row ">
+                        <div className="row">
                             <OverlayTrigger placement="right" overlay={<Tooltip>{t('create.name_help')}</Tooltip>}>
-                                <Form.Group className="col-md-6">
+                                <Form.Group className="col-md-12">
                                     <Form.Label>{t('create.name')}</Form.Label>
                                     <Form.Control type="text" placeholder={t('create.name_default')} value={this.state.name} onChange={e => this.changeName(e.target.value)} />
                                 </Form.Group>
@@ -505,22 +505,25 @@ class CardDesigner extends React.Component {
                     }
             
                     <div className="row">
-                        <Form.Group className="col-md-6">
+                        <Form.Group className="col-md-12">
                             <Form.Label>{t('create.orientation')}</Form.Label>
                             <Form.Control as="select" value={this.state.layout.orientation} onChange={e => this.changeLayoutOrientation(e.target.value)}>
                                 <option value='landscape'>{t('create.orientation_landscape')}</option>
                                 <option value='portrait'>{t('create.orientation_portrait')}</option>
                             </Form.Control>
                         </Form.Group>
-                        {this.props.allowBackSide &&
-                            <Form.Group className="col-md-6">
-                                <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
-                            </Form.Group>
-                        }
                     </div>
 
+                    {this.props.allowBackSide &&
+                        <div className="row">
+                            <Form.Group className="col-md-12">
+                                <Form.Check type="checkbox" checked={this.state.hasBack} label={t('properties.front_back')} onChange={e => this.changeHasBack(e.target.checked)} />
+                            </Form.Group>
+                        </div>
+                    }
+
                     <div className="row">
-                        <Form.Group className="col-md-6">
+                        <Form.Group className="col-md-12">
                             <Form.Label>{t('common.ratio')}</Form.Label>
                             <Form.Control as="select" className="form-control field_type_selector" value={this.state.layout.size} onChange={e => this.changeLayoutSize(e.target.value)}>
                                 {CardHelper.getLayoutSizes(this.props.enabledCardSizes).map(layout => {
@@ -578,7 +581,6 @@ class CardDesigner extends React.Component {
                             </Container>
                         </Navbar>
                     }
-
                     <Tabs defaultActiveKey="front">
                         {this.getSides(true).map((sideType, sideIndex) => {
                             return (

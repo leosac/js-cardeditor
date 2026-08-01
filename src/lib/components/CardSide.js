@@ -39,6 +39,7 @@ class CardSide extends React.Component {
         this.bringToFront = bringToFront.bind(this);
         this.sendToBack = sendToBack.bind(this);
 
+        this.id = crypto.randomUUID();
         this.state = {
             selectedfield: undefined,
 
@@ -127,7 +128,7 @@ class CardSide extends React.Component {
         const { editor, sideType } = this.props;
         return (
             <div>
-                <canvas ref={this.canvasRef} className="carddesign" id={'carddesign_' + sideType} onContextMenu={(e) => this.handleContextMenu.call(this, e)}></canvas>
+                <canvas ref={this.canvasRef} className="carddesign" id={`carddesign_${sideType}-${this.id}`} onContextMenu={(e) => this.handleContextMenu.call(this, e)}></canvas>
                 <CardSideMenu editor={editor} renderer={this.renderer} cardside={this} canvas={this.canvasRef} />
                 {this.state.selectedfield &&
                     <React.Fragment>

@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "./DesignerModal";
@@ -17,6 +17,7 @@ function GridSettings({t, grid, show, editor, onClose, onSubmit}) {
     const [rows, setRows] = useState(grid.rows);
     const [ruler, setRuler] = useState(grid.ruler);
     const [enabled, setEnabled] = useState(grid.enabled);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -36,7 +37,7 @@ function GridSettings({t, grid, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="editgrid" show={show} editor={editor} confirm={t('common.edit')} title={t('common.edit')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`editgrid-${id}`} show={show} editor={editor} confirm={t('common.edit')} title={t('common.edit')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.grid_unit')}</Form.Label>
                 <Form.Control as="select" value={unit} onChange={e => setUnit(e.target.value)}>

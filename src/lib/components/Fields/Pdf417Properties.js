@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "../DesignerModal";
@@ -14,6 +14,7 @@ function Pdf417Properties({t, field, show, editor, onClose, onSubmit}) {
     const [color, setColor] = useState(field.color ?? '#000000');
     const [colorFill, setColorFill] = useState(field.colorFill);
     const [ecLevel, setEcLevel] = useState(field.ecLevel);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -30,7 +31,7 @@ function Pdf417Properties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="pdf417_properties" show={show} editor={editor} title={t('properties.prop_pdf417')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`pdf417_properties-${id}`} show={show} editor={editor} title={t('properties.prop_pdf417')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />

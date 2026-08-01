@@ -16,7 +16,7 @@ const App = () => (
 		It usually needs to be consumed by an application implementing the business value (eg. a <a href="https://leosac.com/credential-provisioning/">credential provisioning solution</a>).<br />
 		This project is heavily based on <a href="https://github.com/leosac/js-cardrendering">JS-CardRendering</a>.
 	</p>
-    <CardDesigner enableDownload="true" enablePrint="true" />
+    <CardDesigner enableDownload="true" enablePrint="true" allowBackSide="true" />
   </div>
 );
 

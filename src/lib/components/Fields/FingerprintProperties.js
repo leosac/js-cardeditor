@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "../DesignerModal";
@@ -11,6 +11,7 @@ import DesignerModal from "../DesignerModal";
 function FingerprintProperties({t, field, show, editor, onClose, onSubmit}) {
     const [autoRequest, setAutoRequest] = useState(field.autoRequest);
     const [targets, setTargets] = useState(field.targets ?? []);
+    const id = useId();
 
     function addTarget() {
         targets.push("");
@@ -42,7 +43,7 @@ function FingerprintProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="fingerprint_properties" show={show} editor={editor} title={t('properties.prop_fingerprint')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`fingerprint_properties-${id}`} show={show} editor={editor} title={t('properties.prop_fingerprint')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Check type="checkbox" label={t('properties.auto_request')} checked={autoRequest} onChange={e => setAutoRequest(e.target.checked)} />
             </Form.Group>

@@ -5,7 +5,7 @@
  **/
 import $ from 'jquery';
 import moment from 'moment';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import Carousel from 'react-bootstrap/Carousel';
@@ -14,6 +14,7 @@ import DesignerModal from "./DesignerModal";
 function History({t, snapshots, show, editor, onClose, onSubmit}) {
     const [dates, setDates] = useState([new Date(), null]);
     const [index, setIndex] = useState(0);
+    const id = useId();
 
     function onDatesChange(newDates) {
         setDates(newDates);
@@ -51,7 +52,7 @@ function History({t, snapshots, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="snapshothistory" show={show} editor={editor} confirm={t('common.goto')} title={t('create.history')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`snapshothistory-${id}`} show={show} editor={editor} confirm={t('common.goto')} title={t('create.history')} onClose={onClose} onSubmit={modalSubmit}>
             <Carousel activeIndex={index} onSelect={(selectedIndex, e) => setIndex(selectedIndex)}>
                 {snapshots.map((snapshot, index) => {
                     return (

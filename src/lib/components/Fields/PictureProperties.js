@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import DesignerModal from "../DesignerModal";
@@ -14,7 +14,8 @@ function PictureProperties({t, field, show, editor, renderer, onClose, onSubmit}
     const [height, setHeight] = useState(field.height);
     const [width, setWidth] = useState(field.width);
     const [keepFieldSize, setKeepFieldSize] = useState(true);
-
+    const id = useId();
+    
     function modalSubmit() {
         if (onSubmit) {
             onSubmit({
@@ -52,7 +53,7 @@ function PictureProperties({t, field, show, editor, renderer, onClose, onSubmit}
     }
     
     return (
-        <DesignerModal id="picture_properties" show={show} editor={editor} title={t('properties.prop_picture')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`picture_properties-${id}`} show={show} editor={editor} title={t('properties.prop_picture')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.picture')}</Form.Label>
                 <ImageEditor image={value} onChange={pictureChanged} />

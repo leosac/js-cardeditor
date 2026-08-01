@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import { CardHelper } from "@leosac/cardrendering";
@@ -14,6 +14,7 @@ function BarcodeProperties({t, field, show, editor, onClose, onSubmit}) {
     const [value, setValue] = useState(field.value);
     const [color, setColor] = useState(field.color);
     const [fontFamily, setFontFamily] = useState(field.fontFamily);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -29,7 +30,7 @@ function BarcodeProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="barcode_properties" show={show} editor={editor} title={t('properties.prop_barcode')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`barcode_properties-${id}`} show={show} editor={editor} title={t('properties.prop_barcode')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />

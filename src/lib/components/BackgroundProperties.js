@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Form from "react-bootstrap/Form";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
@@ -16,6 +16,7 @@ function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) 
     const [color, setColor] = useState(background.color ?? '#FFFFFF');
     const [picture, setPicture] = useState(background.picture);
     const [layout, setLayout] = useState(background.picture_layout);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -31,7 +32,7 @@ function BackgroundProperties({t, background, show, editor, onClose, onSubmit}) 
     }
 
     return (
-        <DesignerModal id="background_properties" show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_background')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`background_properties-${id}`} show={show} editor={editor} confirm={t('properties.update')} title={t('properties.prop_background')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.background_type')}</Form.Label>
                 <Form.Control as="select" value={type} onChange={e => setType(e.target.value)}>

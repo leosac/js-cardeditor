@@ -3,7 +3,7 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState } from "react";
+import { useId, useState } from "react";
 import { withTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
 import { CardHelper } from "@leosac/cardrendering";
@@ -16,6 +16,7 @@ function DataMatrixProperties({t, field, show, editor, onClose, onSubmit}) {
     const [colorFill, setColorFill] = useState(field.colorFill);
     const [sizeIdx, setSizeIdx] = useState(field.sizeIdx);
     const [scheme, setScheme] = useState(field.scheme);
+    const id = useId();
 
     function modalSubmit() {
         if (onSubmit) {
@@ -33,7 +34,7 @@ function DataMatrixProperties({t, field, show, editor, onClose, onSubmit}) {
     }
 
     return (
-        <DesignerModal id="datamatrix_properties" show={show} editor={editor} title={t('properties.prop_datamatrix')} onClose={onClose} onSubmit={modalSubmit}>
+        <DesignerModal id={`datamatrix_properties-${id}`} show={show} editor={editor} title={t('properties.prop_datamatrix')} onClose={onClose} onSubmit={modalSubmit}>
             <Form.Group>
                 <Form.Label>{t('properties.value')}</Form.Label>
                 <Form.Control type="text" placeholder="Text" value={value} onChange={e => setValue(e.target.value)} />

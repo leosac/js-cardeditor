@@ -9,14 +9,15 @@ import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function CardSideMenu({t, editor, cardside, canvas}) {
+    const id = React.useId();
     const sideType = cardside.props.sideType;
-    const { show } = useContextMenu({id: 'carddesign_menu_' + sideType});
+    const { show } = useContextMenu({id: 'carddesign_menu_' + sideType + '-' + id});
     cardside.showMenu = show;
     
     return (
         <div>
             {cardside.renderer.data.fields.selected.length > 0 &&
-                <Menu id={'carddesign_menu_' + sideType}>
+                <Menu id={'carddesign_menu_' + sideType + '-' + id}>
                     {cardside.renderer.data.fields.selected.length === 1 &&
                         <React.Fragment>
                             <Item onClick={() => cardside.editField()}>
@@ -60,7 +61,7 @@ function CardSideMenu({t, editor, cardside, canvas}) {
             }
 
             {cardside.renderer.data.fields.selected.length === 0 &&
-                <Menu id={'carddesign_menu_' + sideType}>
+                <Menu id={'carddesign_menu_' + sideType + '-' + id}>
                     <Item onClick={({ event }) => cardside.renderer.features.fields.pasteFieldAtMousePos(event, canvas.current)}>
                         <span><FontAwesomeIcon icon={["fas", "fa-paste"]} /> {t('menu.paste')}</span>
                     </Item>
