@@ -14,7 +14,7 @@ import GridSettings from "./GridSettings";
 import FieldProperties from "./FieldProperties";
 import FieldBorderProperties from "./FieldBorderProperties";
 import { BarcodeProperties, CircleProperties, DataMatrixProperties, FingerprintProperties, LabelProperties,
-    Pdf417Properties, PictureProperties, QrCodeProperties, RectangleProperties} from "./Fields";
+    Pdf417Properties, PictureProperties, QrCodeProperties, RectangleProperties, TriangleProperties} from "./Fields";
 import ConditionalRendering from "./ConditionalRendering";
 import BackgroundProperties from "./BackgroundProperties";
 import AddFieldFromList from "./AddFieldFromList";
@@ -53,6 +53,7 @@ class CardSide extends React.Component {
             show_field_datamatrix: false,
             show_field_rectangle: false,
             show_field_circle: false,
+            show_field_triangle: false,
             show_field_fingerprint: false,
             show_conditionalrendering: false,
             show_background: false,
@@ -146,6 +147,7 @@ class CardSide extends React.Component {
                         <FingerprintProperties show={this.state.show_field_fingerprint} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_fingerprint: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <RectangleProperties show={this.state.show_field_rectangle} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_rectangle: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                         <CircleProperties show={this.state.show_field_circle} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_circle: false})} onSubmit={(options) => this.updateSelectedField(options)} />
+                        <TriangleProperties show={this.state.show_field_triangle} editor={editor} field={this.state.selectedfield} onClose={() => this.setState({show_field_triangle: false})} onSubmit={(options) => this.updateSelectedField(options)} />
                     </React.Fragment>
                 }
                 {this.renderer.graphics.card &&

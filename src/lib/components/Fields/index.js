@@ -12,5 +12,6 @@ import Pdf417Properties from "./Pdf417Properties";
 import PictureProperties from "./PictureProperties";
 import QrCodeProperties from "./QrCodeProperties";
 import RectangleProperties from "./RectangleProperties";
-export { BarcodeProperties, CircleProperties, DataMatrixProperties, FingerprintProperties, LabelProperties,
+import TriangleProperties from "./TriangleProperties";
+export { BarcodeProperties, CircleProperties, TriangleProperties, DataMatrixProperties, FingerprintProperties, LabelProperties,
     Pdf417Properties, PictureProperties, QrCodeProperties, RectangleProperties};
