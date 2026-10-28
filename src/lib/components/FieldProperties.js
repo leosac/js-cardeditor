@@ -3,15 +3,17 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useId, useState } from 'react';
+import { useContext, useId, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import DesignerModal from "./DesignerModal";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { integerFieldProperty, floatFieldProperty } from "../edit/fields";
+import ThemeContext from "../ThemeContext";
 
 function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
+    const theme = useContext(ThemeContext);
     const [name, setName] = useState(field.name);
     const [height, setHeight] = useState(field.height);
     const [width, setWidth] = useState(field.width);
@@ -72,7 +74,7 @@ function FieldProperties({t, field, show, editor, onClose, onSubmit}) {
             </Form.Group>
             <Form.Group>
             <Form.Check type="checkbox" checked={useMacros} onChange={e => setUseMacros(e.target.checked)} />
-                <OverlayTrigger placement="right" overlay={<Tooltip>{t('macros.tooltip')}</Tooltip>}>
+                <OverlayTrigger placement="right" overlay={<Tooltip data-bs-theme={theme}>{t('macros.tooltip')}</Tooltip>}>
                     <Form.Check.Label>
                         {t('properties.usemacros')}
                     </Form.Check.Label>

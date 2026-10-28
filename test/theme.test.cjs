@@ -68,12 +68,12 @@ async function loadDesigner() {
 test('light is the default, dark is scoped, and changing themes preserves editor state', async () => {
     const CardDesigner = await loadDesigner();
     const editor = new CardDesigner({ ...CardDesigner.defaultProps, t });
+    editor.state.name = 'Keep this template';
     const view = render(editor.render());
     const root = view.container.querySelector('.cardeditor-theme');
     assert.equal(root.dataset.bsTheme, 'light');
     assert.equal(root.querySelectorAll('.navbar.bg-light').length, 2);
 
-    editor.state.name = 'Keep this template';
     const state = editor.state;
     editor.props = { ...editor.props, theme: 'dark' };
     view.rerender(editor.render());
