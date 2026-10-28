@@ -53,10 +53,16 @@ npm start
 npm run test
 ```
 
+The theme regression tests use Node's built-in test runner:
+```bash
+node --test test/theme.test.cjs
+```
+
 ## Parameters
 Several parameters can be optionally passed to the component.
 
     - content [`Object`]: Card Template
+    - theme [`String`] (`Default: "light"`): Editor appearance, either `"light"` or `"dark"`
     - draggableFields [`Array`] (`{name : String, default_value: String}`): List of draggable fields
     - formatVersion [`String`] (`Default: Undefined`): Force a specific format version for the output (default to latest version)
     - enabledCardSizes [`Object` : Select cards templates you want to authorize. (more informations inside "Card Templates" section)
@@ -67,6 +73,21 @@ Several parameters can be optionally passed to the component.
     - enableUnprintable [`Boolean`] (`Default:false`): Active unprintable objects, like fingerprint
     - onEdit [`Function`] (`Param 1: Snapshot): Function called at each template changed / field edition (created, removed, resized, moved...)
     - onSubmit [`Function`] (): Enable the Submit button and trigger this function on submition
+
+## Theme
+Use the `theme` prop to match the embedding application's appearance:
+
+```jsx
+<CardDesigner theme="dark" enableDownload={true} enablePrint={true} />
+```
+
+Omitting `theme` keeps the existing light theme. The prop can be updated at runtime;
+there is no theme switch in the UI. The theme is scoped to the editor and its dialogs
+and menus, without changing the host page or the card template, preview, or printed output.
+Bootstrap 5.3 or later CSS must be loaded by the embedding application.
+
+For the DOM API, pass `{ theme: "dark" }` to `createCardEditor`, or set
+`data-theme="dark"` on an auto-initialized `.cardeditor` element.
 
 ## Enable Card Sizes
 Parameter `enabledCardSizes` enable/disable templates size.

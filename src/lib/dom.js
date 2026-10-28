@@ -8,6 +8,7 @@ void pixiEventsLoaded;
 function createCardEditor(domContainer, props) {
   if (props === undefined) {
     props = {
+      theme: domContainer.dataset.theme || 'light',
       enableDownload: domContainer.dataset.enableDownload === 'true',
       enablePrint: domContainer.dataset.enablePrint === 'true',
       enableLoad: domContainer.dataset.enableLoad === 'true',

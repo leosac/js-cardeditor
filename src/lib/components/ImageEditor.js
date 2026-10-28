@@ -3,11 +3,42 @@
  *
  * @license GNU LGPL version 3
  **/
-import { useState, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { withTranslation } from "react-i18next";
 import FilerobotImageEditor, { TABS } from 'react-filerobot-image-editor';
+import ThemeContext from "../ThemeContext";
+
+const darkTheme = {
+    palette: {
+        'bg-primary': '#212529',
+        'bg-secondary': '#2b3035',
+        'bg-primary-light': '#343a40',
+        'bg-primary-hover': '#495057',
+        'bg-primary-active': '#495057',
+        'bg-primary-stateless': '#495057',
+        'bg-stateless': '#212529',
+        'bg-active': '#343a40',
+        'bg-hover': '#343a40',
+        'bg-grey': '#495057',
+        'bg-base-light': '#343a40',
+        'bg-base-medium': '#495057',
+        'bg-tooltip': '#343a40',
+        'txt-primary': '#dee2e6',
+        'txt-secondary': '#adb5bd',
+        'txt-placeholder': '#adb5bd',
+        'icon-primary': '#adb5bd',
+        'icons-secondary': '#adb5bd',
+        'icons-primary-hover': '#dee2e6',
+        'icons-secondary-hover': '#dee2e6',
+        'btn-secondary-text': '#dee2e6',
+        'borders-primary': '#495057',
+        'borders-secondary': '#495057',
+        'borders-strong': '#6c757d'
+    }
+};
 
 function ImageEditor({t, image, onChange}) {
+    const theme = useContext(ThemeContext);
     const [showEditor, setShowEditor] = useState(false);
     const inputFile = useRef(null);
 
@@ -47,6 +78,7 @@ function ImageEditor({t, image, onChange}) {
             }
             {showEditor &&
                 <FilerobotImageEditor
+                    theme={theme === 'dark' ? darkTheme : undefined}
                     source={image}
                     tabsIds={[TABS.ADJUST, TABS.FINETUNE, TABS.FILTERS, TABS.ANNOTATE, TABS.WATERMARK, TABS.RESIZE]}
                     onClose={() => setShowEditor(false)}

@@ -4,13 +4,15 @@
  * @license GNU LGPL version 3
  **/
 import $ from 'jquery';
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import ThemeContext from "../ThemeContext";
 
 function DesignerModal({t, show, editor, id, title, children, onClose, onSubmit, confirm = t('properties.update')}) {
-    
+    const theme = useContext(ThemeContext);
+
     useEffect(() => {
         $(".modal-dialog").draggable({
             handle: ".modal-header"
@@ -44,7 +46,7 @@ function DesignerModal({t, show, editor, id, title, children, onClose, onSubmit,
     }
     
     return (
-        <Modal id={id} show={show} onHide={handleOnClose} onShow={handleOnShow}>
+        <Modal id={id} className="cardeditor-theme" data-bs-theme={theme} show={show} onHide={handleOnClose} onShow={handleOnShow}>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>

@@ -25,3 +25,27 @@
 .navbar-nav > a.active {
 	font-weight: bold;
 }
+
+.cardeditor-theme {
+	color: var(--bs-body-color);
+	color-scheme: light;
+}
+
+.cardeditor-theme:not(.modal) {
+	background-color: var(--bs-body-bg);
+}
+
+.cardeditor-theme[data-bs-theme="dark"] {
+	color-scheme: dark;
+}
+
+/* The third-party picker uses inline light colors rather than Bootstrap variables. */
+.cardeditor-theme[data-bs-theme="dark"] .sketch-picker,
+.cardeditor-theme[data-bs-theme="dark"] .sketch-picker input {
+	background: var(--bs-body-bg) !important;
+	color: var(--bs-body-color) !important;
+}
+
+.cardeditor-theme[data-bs-theme="dark"] .sketch-picker label {
+	color: var(--bs-body-color) !important;
+}

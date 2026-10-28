@@ -7,8 +7,10 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ThemeContext from "../ThemeContext";
 
 function CardSideMenu({t, editor, cardside, canvas}) {
+    const theme = React.useContext(ThemeContext);
     const id = React.useId();
     const sideType = cardside.props.sideType;
     const { show } = useContextMenu({id: 'carddesign_menu_' + sideType + '-' + id});
@@ -17,7 +19,7 @@ function CardSideMenu({t, editor, cardside, canvas}) {
     return (
         <div>
             {cardside.renderer.data.fields.selected.length > 0 &&
-                <Menu id={'carddesign_menu_' + sideType + '-' + id}>
+                <Menu id={'carddesign_menu_' + sideType + '-' + id} theme={theme}>
                     {cardside.renderer.data.fields.selected.length === 1 &&
                         <React.Fragment>
                             <Item onClick={() => cardside.editField()}>
@@ -61,7 +63,7 @@ function CardSideMenu({t, editor, cardside, canvas}) {
             }
 
             {cardside.renderer.data.fields.selected.length === 0 &&
-                <Menu id={'carddesign_menu_' + sideType + '-' + id}>
+                <Menu id={'carddesign_menu_' + sideType + '-' + id} theme={theme}>
                     <Item onClick={({ event }) => cardside.renderer.features.fields.pasteFieldAtMousePos(event, canvas.current)}>
                         <span><FontAwesomeIcon icon={["fas", "fa-paste"]} /> {t('menu.paste')}</span>
                     </Item>

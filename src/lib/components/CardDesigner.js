@@ -44,6 +44,8 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import NavDivider from "./NavDivider"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ThemeContext from "../ThemeContext";
+import "../../css/jsCardRendering.css";
 
 class CardDesigner extends React.Component {
 
@@ -469,9 +471,13 @@ class CardDesigner extends React.Component {
     }
 
     render() {
-        const { t } = this.props;
+        const { t, theme } = this.props;
+        if (theme !== 'light' && theme !== 'dark') {
+            throw new Error('CardDesigner: theme must be "light" or "dark".');
+        }
         return (
-            <div>            
+            <ThemeContext.Provider value={theme}>
+            <div className="cardeditor-theme" data-bs-theme={theme}>
                 {this.showMessageInvalidFormatVersion(this.props.formatVersion) &&
                     <div id="invalidFormatVersion" className="alert alert-danger alert-dismissible" role="alert">
                         {t('create.invalidFormatVersion')}
@@ -495,7 +501,7 @@ class CardDesigner extends React.Component {
                     </div>
                     {this.props.enableName &&
                         <div className="row">
-                            <OverlayTrigger placement="right" overlay={<Tooltip>{t('create.name_help')}</Tooltip>}>
+                            <OverlayTrigger placement="right" overlay={<Tooltip data-bs-theme={theme}>{t('create.name_help')}</Tooltip>}>
                                 <Form.Group className="col-md-12">
                                     <Form.Label>{t('create.name')}</Form.Label>
                                     <Form.Control type="text" placeholder={t('create.name_default')} value={this.state.name} onChange={e => this.changeName(e.target.value)} />
@@ -538,7 +544,7 @@ class CardDesigner extends React.Component {
                     </div>
             
                     {(this.props.enableLoad || this.props.enableDownload || this.props.enablePrint || this.showCustomSize()) &&
-                        <Navbar bg="light" expand="lg">
+                        <Navbar bg={theme} expand="lg">
                             <Container>
                                 <Navbar.Collapse id="wdcbtns">
                                     <Nav className="me-auto">
@@ -585,7 +591,7 @@ class CardDesigner extends React.Component {
                         {this.getSides(true).map((sideType, sideIndex) => {
                             return (
                                 <Tab key={sideType} eventKey={sideType} title={t('properties.' + sideType)} disabled={(sideIndex > 0 && !this.state.hasBack)}>
-                                    <Navbar bg="light" expand="lg">
+                                    <Navbar bg={theme} expand="lg">
                                         <Container>
                                             <Navbar.Collapse id={sideType + '_wdcbtns'}>
                                                 <Nav className="me-auto">
@@ -707,11 +713,13 @@ class CardDesigner extends React.Component {
                 }
                 <History show={this.state.show_history} editor={this} snapshots={this.state.snapshots.history} onClose={() => this.setState({show_history: false})} onSubmit={this.loadSnapshot} />
             </div>
+            </ThemeContext.Provider>
         );
     }
 }
 
 CardDesigner.defaultProps = {
+    theme: 'light',
     formatVersion: '3.0.0.0',
     lang: 'en',
     enabledCardSizes: {
