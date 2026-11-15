@@ -141,6 +141,57 @@ test('both context menu branches receive the selected theme', async () => {
     }
 });
 
+test('changing the background preserves card fields', async () => {
+    const CardSide = (await load('src\\lib\\components\\CardSide.js', {
+        'react-i18next': translate,
+        '@leosac/cardrendering': { CardRenderer: class {} },
+        '../edit/onEvent': new Proxy({}, { get: () => noop }),
+        '../edit/fields': new Proxy({}, { get: () => noop }),
+        '../edit/grid': new Proxy({}, { get: () => noop }),
+        '../edit/card': new Proxy({}, { get: () => noop }),
+        './GridSettings': () => null,
+        './FieldProperties': () => null,
+        './FieldBorderProperties': () => null,
+        './Fields': {},
+        './ConditionalRendering': () => null,
+        './BackgroundProperties': () => null,
+        './AddFieldFromList': () => null,
+        './CardSideMenu': () => null,
+        'react-contexify/ReactContexify.css': {}
+    }, { crypto: require('node:crypto').webcrypto })).default;
+    const side = new CardSide({ editor: { sides: {} }, sideType: 'front' });
+    const fields = [
+        { options: { type: 'label', name: 'name' } },
+        { options: { type: 'qrcode', name: 'code' } }
+    ];
+    const card = {
+        children: [{ options: {} }, ...fields, { options: { zIndex: 1000 } }],
+        options: { background: { color: '#FFFFFF' } },
+        removeChildren() {
+            this.children = [];
+        },
+        addChild(child) {
+            this.children.push(child);
+        }
+    };
+    let changed = false;
+    side.renderer = {
+        graphics: { card },
+        drawCardBackground: async () => {
+            card.removeChildren();
+            card.addChild({ options: { zIndex: 1000 } });
+        },
+        sortByZIndex: () => {},
+        handleOnChange: () => { changed = true; }
+    };
+
+    await side.updateBackground({ color: '#123456' });
+
+    assert.deepEqual(card.children.filter(child => child.options.type), fields);
+    assert.equal(card.options.background.color, '#123456');
+    assert.equal(changed, true);
+});
+
 test('image editing receives a dark palette and restores its default light palette', async () => {
     let imageTheme;
     const ImageEditor = (await load('src\\lib\\components\\ImageEditor.js', {

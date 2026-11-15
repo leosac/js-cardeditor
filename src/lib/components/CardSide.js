@@ -107,12 +107,21 @@ class CardSide extends React.Component {
         this.renderer.features.fields.updateField(options, createOpt);
     }
 
-    updateBackground(background) {
+    async updateBackground(background) {
+        const card = this.renderer.graphics.card;
+        const fields = card.children.filter(child => child.options && child.options.type);
         const options = Object.keys(background);
         options.forEach(key => {
-            this.renderer.graphics.card.options.background[key] = background[key];
+            card.options.background[key] = background[key];
         });
-        this.renderer.drawCardBackground();
+
+        try {
+            await this.renderer.drawCardBackground();
+        } finally {
+            fields.forEach(field => card.addChild(field));
+            this.renderer.sortByZIndex();
+        }
+
         this.renderer.handleOnChange();
     }
 
