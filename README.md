@@ -13,6 +13,8 @@ Related projects:
 ## Prerequisites
 You need React >= 18
 
+Canvas and context-menu IDs use `crypto.randomUUID()` when available, with a non-cryptographic fallback for environments without it.
+
 ## Installation
 `npm install @leosac/js-cardeditor --save`
 

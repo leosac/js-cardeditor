@@ -141,10 +141,10 @@ test('both context menu branches receive the selected theme', async () => {
     }
 });
 
-test('changing the background preserves card fields', async () => {
-    const CardSide = (await load('src\\lib\\components\\CardSide.js', {
+async function loadCardSide(globals = {}) {
+    return (await load('src\\lib\\components\\CardSide.js', {
         'react-i18next': translate,
-        '@leosac/cardrendering': { CardRenderer: class {} },
+        '@leosac/cardrendering': { CardRenderer: class { constructor() { this.graphics = {}; } } },
         '../edit/onEvent': new Proxy({}, { get: () => noop }),
         '../edit/fields': new Proxy({}, { get: () => noop }),
         '../edit/grid': new Proxy({}, { get: () => noop }),
@@ -158,7 +158,27 @@ test('changing the background preserves card fields', async () => {
         './AddFieldFromList': () => null,
         './CardSideMenu': () => null,
         'react-contexify/ReactContexify.css': {}
-    }, { crypto: require('node:crypto').webcrypto })).default;
+    }, globals)).default;
+}
+
+test('card sides use UUIDs when available and unique fallback IDs otherwise', async () => {
+    const uuid = 'test-uuid';
+    const CardSideWithCrypto = await loadCardSide({ crypto: { randomUUID: () => uuid } });
+    const side = new CardSideWithCrypto({ editor: { sides: {} }, sideType: 'front' });
+    assert.equal(side.id, uuid);
+    assert.equal(side.render().props.children[0].props.id, `carddesign_front-${uuid}`);
+
+    for (const crypto of [undefined, null, {}, { randomUUID: null }]) {
+        const CardSide = await loadCardSide({ crypto });
+        const first = new CardSide({ editor: { sides: {} }, sideType: 'front' });
+        const second = new CardSide({ editor: { sides: {} }, sideType: 'front' });
+        assert.notEqual(first.id, second.id);
+        assert.equal(first.render().props.children[0].props.id, `carddesign_front-${first.id}`);
+    }
+});
+
+test('changing the background preserves card fields', async () => {
+    const CardSide = await loadCardSide({ crypto: require('node:crypto').webcrypto });
     const side = new CardSide({ editor: { sides: {} }, sideType: 'front' });
     const fields = [
         { options: { type: 'label', name: 'name' } },

@@ -21,6 +21,19 @@ import AddFieldFromList from "./AddFieldFromList";
 import CardSideMenu from "./CardSideMenu";
 import 'react-contexify/ReactContexify.css';
 
+let fallbackIdPrefix;
+let fallbackIdCounter = 0;
+
+function createSideId() {
+    if (typeof crypto !== "undefined" && crypto && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+    }
+    if (!fallbackIdPrefix) {
+        fallbackIdPrefix = `fallback-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    }
+    return `${fallbackIdPrefix}-${++fallbackIdCounter}`;
+}
+
 class CardSide extends React.Component {
 
     constructor (props) {
@@ -39,7 +52,7 @@ class CardSide extends React.Component {
         this.bringToFront = bringToFront.bind(this);
         this.sendToBack = sendToBack.bind(this);
 
-        this.id = crypto.randomUUID();
+        this.id = createSideId();
         this.state = {
             selectedfield: undefined,
 
